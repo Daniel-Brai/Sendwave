@@ -10,6 +10,12 @@
     "sourceMap": true,
     "outDir": "./dist",
     "baseUrl": "./",
+    "paths": {
+      "@pkg/config": ["app/pkg/config"],
+      "@pkg/database": ["app/pkg/database"],
+      "@pkg/mailer": ["app/pkg/mailer"],
+      "@utils/formatters": ["app/utils/formatters"]
+    },
     "incremental": true,
     "skipLibCheck": true,
     "strictNullChecks": false,
