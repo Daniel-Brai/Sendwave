@@ -1,10 +1,10 @@
 {
   "name": "sendwave",
   "version": "0.0.1",
-  "description": "",
-  "author": "",
+  "description": "Sendwave, a quick email streamlining & scheduling tool",
+  "author": "Daniel Brai",
   "private": true,
-  "license": "UNLICENSED",
+  "license": "MIT",
   "scripts": {
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
