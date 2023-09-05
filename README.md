@@ -16,8 +16,8 @@ Sendwave is a versatile email tool designed to simplify your communication needs
 ## Features
 
 - [x] Email streamlining through bulk emails.
-- [x] Scheduled emails using cron jobs for registered users
-- [x] Ability for optional paramaterized email templates (suitable mass applications)
+- [] Scheduled emails using cron jobs for registered users
+- [] Ability for optional paramaterized email templates (suitable mass applications)
 
 ## Installation
 
@@ -36,17 +36,4 @@ $ pnpm run start:dev
 
 # production mode
 $ pnpm run start:prod
-```
-
-## Test
-
-```bash
-# unit tests
-$ pnpm run test
-
-# e2e tests
-$ pnpm run test:e2e
-
-# test coverage
-$ pnpm run test:cov
 ```
