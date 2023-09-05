@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://github.com/Daniel-Brai/Sendwave" target="blank">
-    <img src="https://github.com/Daniel-Brai/Sendwave/blob/main/app/assets/images/sendwave.svg" width="100" alt="Sendwave Logo" />
+    <img src="https://github.com/Daniel-Brai/Sendwave/blob/main/app/client/assets/images/sendwave.svg" width="100" alt="Sendwave Logo" />
   </a>
 </p>
 
