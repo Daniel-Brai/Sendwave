@@ -21,7 +21,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
       message: errorResponse['message'],
       timestamp: formatTimestamp(Date.now()),
     };
-    return response.status(context.statusCode).json(context);
+    return response.status(status).json(context);
   }
 }
 

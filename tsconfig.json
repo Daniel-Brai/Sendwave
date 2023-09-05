@@ -8,13 +8,14 @@
     "allowSyntheticDefaultImports": true,
     "target": "ES2021",
     "sourceMap": true,
-    "outDir": "./dist",
+    "outDir": "./app/server",
     "baseUrl": "./",
     "paths": {
-      "@pkg/config": ["app/pkg/config"],
-      "@pkg/database": ["app/pkg/database"],
-      "@pkg/mailer": ["app/pkg/mailer"],
-      "@utils/formatters": ["app/utils/formatters"]
+      "@pkg/config": ["src/pkg/config"],
+      "@pkg/database": ["src/pkg/database"],
+      "@pkg/mailer": ["src/pkg/mailer"],
+      "@utils/formatters": ["src/utils/formatters"],
+      "@utils/helpers": ["src/utils/helpers"]
     },
     "incremental": true,
     "skipLibCheck": true,

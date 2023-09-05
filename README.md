@@ -13,6 +13,12 @@
 
 Sendwave is a versatile email tool designed to simplify your communication needs by effortlessly sending bulk and scheduled emails to reach your contacts at the perfect time.
 
+## Features
+
+- [x] Email streamlining through bulk emails.
+- [x] Scheduled emails using cron jobs for registered users
+- [x] Ability for optional paramaterized email templates (suitable mass applications)
+
 ## Installation
 
 ```bash
