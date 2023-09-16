@@ -45,7 +45,7 @@ export class ConfigService {
   ): NodeEnvironmentConfig {
     return {
       type: env.NODE_ENV! || defaultConfig.type,
-      port: Number(env.PORT!) || defaultConfig.port,
+      port: parseInt(env.PORT!) || defaultConfig.port,
     };
   }
 
@@ -56,7 +56,7 @@ export class ConfigService {
     return {
       database: {
         host: env.DATABASE_HOST! || defaultConfig.database.host,
-        port: Number(env.DATABASE_PORT!) || defaultConfig.database.port,
+        port: parseInt(env.DATABASE_PORT!) || defaultConfig.database.port,
         username: env.DATABASE_USERNAME! || defaultConfig.database.username,
         password: env.DATABASE_PASSWORD! || defaultConfig.database.password,
         name: env.DATABASE_NAME! || defaultConfig.database.name,
@@ -66,36 +66,17 @@ export class ConfigService {
       },
       redis: {
         host: env.REDIS_HOST! || defaultConfig.redis.host,
-        port: Number(env.REDIS_PORT!) || defaultConfig.redis.port,
+        port: parseInt(env.REDIS_PORT!) || defaultConfig.redis.port,
         username: env.REDIS_USERNAME! || defaultConfig.redis.username,
         password: env.REDIS_PASSWORD! || defaultConfig.redis.password,
         name: env.REDIS_NAME! || defaultConfig.redis.name,
         url: env.REDIS_URL! || defaultConfig.redis.url,
       },
-      cloudinary: {
-        name: env.CLOUDINARY_CLOUD_NAME! || defaultConfig.cloudinary.name,
-        api_key: env.CLOUDINARY_API_KEY! || defaultConfig.cloudinary.api_key,
-        secret_key:
-          env.CLOUDINARY_SECRET_KEY! || defaultConfig.cloudinary.secret_key,
-      },
-      azure: {
-        blob: {
-          storage_container_name:
-            env.AZURE_STORAGE_CONTAINER_NAME! ||
-            defaultConfig.azure.blob.storage_container_name,
-          storage_account_name:
-            env.AZURE_STORAGE_ACCOUNT_NAME! ||
-            defaultConfig.azure.blob.storage_account_name,
-          storage_connection_string:
-            env.AZURE_STORAGE_CONNECTION_STRING! ||
-            defaultConfig.azure.blob.storage_connection_string,
-        },
-      },
       mailer: {
         smtp: {
           user: env.SMTP_USER! || defaultConfig.mailer.smtp.user,
           host: env.SMTP_HOST! || defaultConfig.mailer.smtp.host,
-          port: Number(env.SMTP_PORT!) || defaultConfig.mailer.smtp.port,
+          port: parseInt(env.SMTP_PORT!) || defaultConfig.mailer.smtp.port,
           address: env.SMTP_ADDRESS! || defaultConfig.mailer.smtp.address,
           password: env.SMTP_PASSWORD! || defaultConfig.mailer.smtp.password,
         },
@@ -105,8 +86,8 @@ export class ConfigService {
         password: env.SWAGGER_PASSWORD! || defaultConfig.swagger.password,
       },
       throttler: {
-        ttl: Number(env.THROTTLER_TTL!) || defaultConfig.throttler.ttl,
-        limit: Number(env.THROTTLER_LIMIT!) || defaultConfig.throttler.limit,
+        ttl: parseInt(env.THROTTLER_TTL!) || defaultConfig.throttler.ttl,
+        limit: parseInt(env.THROTTLER_LIMIT!) || defaultConfig.throttler.limit,
       },
     };
   }
@@ -116,21 +97,13 @@ export class ConfigService {
     defaultConfig: Readonly<AuthConfig>,
   ): AuthConfig {
     return {
-      expiresIn: Number(env.TOKEN_EXPIRY!) || defaultConfig.expiresIn,
+      expiresIn: parseInt(env.TOKEN_EXPIRY!) || defaultConfig.expiresIn,
+      cookie_token_secret:
+        env.COOKIE_TOKEN_SECRET! || defaultConfig.cookie_token_secret,
       access_token_secret:
         env.JWT_ACCESS_TOKEN_SECRET! || defaultConfig.access_token_secret,
       refresh_token_secret:
         env.JWT_REFRESH_TOKEN_SECRET! || defaultConfig.refresh_token_secret,
-      google: {
-        oauth_google_client_id:
-          env.OAUTH_GOOGLE_CLIENT_ID! ||
-          defaultConfig.google.oauth_google_client_id,
-        oauth_callback:
-          env.OAUTH_CALLBACK_URL! || defaultConfig.google.oauth_callback,
-        oauth_google_secret_key:
-          env.OAUTH_GOOGLE_SECRET_KEY! ||
-          defaultConfig.google.oauth_google_secret_key,
-      },
       github: {
         oauth_github_client_id:
           env.OAUTH_GITHUB_CLIENT_ID! ||

@@ -1,8 +1,9 @@
+import { getSecretKey } from '@utils/transformers';
 import { ConfigData } from './config.interface';
 
 export const DEFAULT_CONFIG: ConfigData = {
   environment: {
-    port: Number(process.env.PORT || 3000),
+    port: 3000,
     type: 'production',
   },
   services: {
@@ -22,18 +23,6 @@ export const DEFAULT_CONFIG: ConfigData = {
       password: '',
       name: '',
       url: '',
-    },
-    cloudinary: {
-      name: '',
-      api_key: '',
-      secret_key: '',
-    },
-    azure: {
-      blob: {
-        storage_container_name: '',
-        storage_account_name: '',
-        storage_connection_string: '',
-      },
     },
     mailer: {
       smtp: {
@@ -55,13 +44,9 @@ export const DEFAULT_CONFIG: ConfigData = {
   },
   authentication: {
     expiresIn: 30000,
-    access_token_secret: '',
-    refresh_token_secret: '',
-    google: {
-      oauth_google_client_id: '',
-      oauth_callback: '',
-      oauth_google_secret_key: '',
-    },
+    cookie_token_secret: getSecretKey(),
+    access_token_secret: getSecretKey(),
+    refresh_token_secret: getSecretKey(),
     github: {
       oauth_github_client_id: '',
       oauth_callback: '',

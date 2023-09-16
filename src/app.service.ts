@@ -3,7 +3,7 @@ import { Response } from 'express';
 
 @Injectable()
 export class AppService {
-   root(res: Response) {
+  root(res: Response) {
     return res.render('index', {
       title: 'Sendwave - Streamlining the bulk email experience',
     });

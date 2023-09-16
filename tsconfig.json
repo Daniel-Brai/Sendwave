@@ -11,11 +11,18 @@
     "outDir": "./app/server",
     "baseUrl": "./",
     "paths": {
+      "@common/dtos": ["src/common/dtos"],
+      "@common/interfaces": ["src/common/interfaces"],
+      "@common/types": ["src/common/types"],
       "@pkg/config": ["src/pkg/config"],
       "@pkg/database": ["src/pkg/database"],
       "@pkg/mailer": ["src/pkg/mailer"],
+      "@pkg/redis": ["src/pkg/redis"],
+      "@pkg/swagger": ["src/pkg/swagger"],
       "@utils/formatters": ["src/utils/formatters"],
-      "@utils/helpers": ["src/utils/helpers"]
+      "@utils/generators": ["src/utils/generators"],
+      "@utils/helpers": ["src/utils/helpers"],
+      "@utils/transformers": ["src/utils/transformers"]
     },
     "incremental": true,
     "skipLibCheck": true,
