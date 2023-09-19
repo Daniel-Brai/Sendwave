@@ -11,6 +11,8 @@
     "outDir": "./app/server",
     "baseUrl": "./",
     "paths": {
+      "@common/constants": ["src/common/constants"],
+      "@common/decorators": ["src/common/decorators"],
       "@common/dtos": ["src/common/dtos"],
       "@common/interfaces": ["src/common/interfaces"],
       "@common/types": ["src/common/types"],

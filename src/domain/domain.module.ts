@@ -1,8 +1,6 @@
 import { Module } from '@nestjs/common';
-import { ThrottlerModule } from '@nestjs/throttler';
 import { DatabaseModule } from '@pkg/database';
-import { ConfigModule, ConfigService } from '@pkg/config';
-import { AuthModule } from './auth/auth.module';
+import { AuthenticationModule } from './authentication/authentication.module';
 import { UserModule } from './user/user.module';
 import { UserEntity } from './user/entities/user.entity';
 
@@ -11,17 +9,7 @@ import { UserEntity } from './user/entities/user.entity';
     DatabaseModule.forRoot({
       entities: [UserEntity],
     }),
-    ThrottlerModule.forRootAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: (config: ConfigService) => [
-        {
-          ttl: config.get().services.throttler.ttl,
-          limit: config.get().services.throttler.limit,
-        },
-      ],
-    }),
-    AuthModule,
+    AuthenticationModule,
     UserModule,
   ],
   controllers: [],

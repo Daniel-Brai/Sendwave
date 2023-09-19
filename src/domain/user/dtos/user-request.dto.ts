@@ -17,33 +17,13 @@ import { Type as validateType } from 'class-transformer';
 
 export class UserSignupDto {
   @ApiProperty({
-    description: 'The business name provided by the user',
-    example: 'Hydro Logistics LTD',
-    required: true,
-  })
-  @MaxLength(255)
-  @IsString()
-  @IsDefined()
-  public name!: string;
-
-  @ApiProperty({
     description: 'The email provided by the user',
-    example: 'mazi@hydrologistics.com',
+    example: 'johndoe@gmail.com',
     required: true,
   })
   @IsEmail()
   @IsDefined()
   public email!: string;
-
-  @ApiProperty({
-    description:
-      'The phone number with international codes provided by the user',
-    example: '+2348024233225',
-    required: true,
-  })
-  @IsPhoneNumber()
-  @IsDefined()
-  public phone_number!: string;
 
   @ApiProperty({
     description: 'The password provided by the user',
@@ -61,36 +41,6 @@ export class UserSignupDto {
 }
 
 export class UpdateUserDto extends PartialType<UserSignupDto>(UserSignupDto) {}
-// export class UpdateUserDto {
-//   @ApiProperty({
-//     description: 'The business name provided by the user',
-//     example: 'Hydro Logistics LTD',
-//     required: true,
-//   })
-//   @MaxLength(255)
-//   @IsString()
-//   @IsOptional()
-//   public name!: string;
-//
-//   @ApiProperty({
-//     description: 'The email provided by the user',
-//     example: 'mazi@hydrologistics.com',
-//     required: true,
-//   })
-//   @IsEmail()
-//   @IsOptional()
-//   public email!: string;
-//
-//   @ApiProperty({
-//     description:
-//       'The phone number with international codes provided by the user',
-//     example: '+2348024233225',
-//     required: true,
-//   })
-//   @IsPhoneNumber()
-//   @IsOptional()
-//   public phone_number!: string;
-// }
 
 export class ResetPassword {
   @ApiProperty({
@@ -146,7 +96,7 @@ export class ResetPasswordDto extends PartialType<UserSignupDto>(
 export class ForgetPasswordDto {
   @ApiProperty({
     description: 'The email provided by the user who forgot their password',
-    example: 'mazi@hydrologistics.com',
+    example: 'johndoe@gmail.com',
     required: true,
   })
   @IsEmail()
@@ -155,16 +105,6 @@ export class ForgetPasswordDto {
 }
 
 export class VerifyUserOtpDto {
-  @ApiProperty({
-    description:
-      'The pin id provided when the user requested to verify their account',
-    example: '123456789065649900',
-    required: true,
-  })
-  @IsString()
-  @IsDefined()
-  public pinId!: string;
-
   @ApiProperty({
     description: 'The otp provided by the user to verify their account',
     example: '123456',

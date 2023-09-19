@@ -47,7 +47,6 @@ export class MailProcessor {
   @Process(REGISTRATION_CONFIRMED)
   public async registrationConfirmed(
     job: Job<{
-      fullname: string;
       emailAddress: string;
       confirmUrl: string;
     }>,
@@ -64,7 +63,7 @@ export class MailProcessor {
         template: './registration_confirmed',
         context: {
           confirmUrl: job.data.confirmUrl,
-          name: job.data.fullname,
+          email: job.data.emailAddress,
         },
       });
     } catch {

@@ -6,9 +6,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { AppConfigService } from '@pkg/config';
 import { PostgresErrorCode } from '@pkg/database';
-import { TermiiService } from '@pkg/termii';
 import { PageDto, PageMetaDto, PageOptionsDto } from '@common/dtos';
 import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt';
@@ -25,6 +23,8 @@ import {
 } from '../dtos/user-response.dto';
 import { UserEntity } from '../entities/user.entity';
 import { AuthenticationService } from '../../authentication/services/authentication.service';
+import { MailService } from '@pkg/mailer';
+import { generateOtpCode, generateRandomKey } from '@utils/generators';
 
 @Injectable()
 export class UserService {
@@ -33,9 +33,8 @@ export class UserService {
   constructor(
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
-    private readonly configService: AppConfigService,
     private readonly authService: AuthenticationService,
-    private readonly termiiService: TermiiService,
+    private readonly mailService: MailService,
   ) {}
 
   public async findAll(query: PageOptionsDto): Promise<PageDto<UserEntity>> {
@@ -100,33 +99,15 @@ export class UserService {
     }
   }
 
-  public async findOneByPhoneNumber(phoneNumber: string): Promise<UserEntity> {
-    this.logger.log(`Retrieve user by phone number`);
-    try {
-      const user = await this.userRepository.findOne({
-        where: {
-          phone_number: phoneNumber,
-        },
-      });
-      return user;
-    } catch (error) {
-      this.logger.error(
-        { id: `retrieve-user-by-phone-number-error` },
-        `Retrieve user by phone number`,
-      );
-      throw new NotFoundException(
-        'No account associated with this phone number',
-      );
-    }
-  }
-
   public async create(body: UserSignupDto): Promise<UserEntity> {
     this.logger.log(`Create a user`);
     try {
       const hashedPassword = await this.hash(body.password);
+      const otp_code = generateOtpCode(6);
       const createdUser = this.userRepository.create({
         ...body,
         password: hashedPassword,
+        confirmation_token: otp_code,
       });
       const user = await this.userRepository.save(createdUser);
       return user;
@@ -136,59 +117,6 @@ export class UserService {
         throw new ConflictException('User with that email already exists');
       }
       throw new InternalServerErrorException('Something went wrong');
-    }
-  }
-
-  public async generateOtpById(id: string): Promise<GenerateUserOtpDto> {
-    this.logger.log(`Generate a user otp by id`);
-    try {
-      const user = await this.findOneById(id);
-      const res = await this.termiiService.sendToken({
-        user: user.phone_number,
-        company: 'N-Alert',
-        pinLength: 6,
-        pinAttempts: 1,
-        ttl: 60,
-        message: `Hi ${user.name}!` + ' Your verification code is <otp> AMAPAY',
-      });
-      return {
-        userId: user.id,
-        message: `Otp code generated successfully with the pinId: ${res.pinId}`,
-      };
-    } catch (error) {
-      this.logger.error(
-        { id: `generate-a-user-otp-by-id` },
-        `Generate a user otp by id`,
-      );
-      throw new InternalServerErrorException('User OTP generation failed');
-    }
-  }
-
-  public async verifyOtpById(
-    id: string,
-    { pinId, otp_code }: VerifyUserOtpDto,
-  ): Promise<VerifyMessageDto> {
-    this.logger.log(`Verify a user otp by id`);
-    try {
-      const user = await this.findOneById(id);
-      await this.termiiService.verifyToken({ pinId, otp_code });
-      const updatedUser = await this.userRepository.preload({
-        id: user.id,
-        isVerified: true,
-        ...user,
-      });
-      await this.userRepository.save(updatedUser);
-      return {
-        message: 'Account verification successful',
-      };
-    } catch (error) {
-      this.logger.error(
-        { id: `verify-a-user-otp-by-id` },
-        `Verify a user otp by id`,
-      );
-      throw new InternalServerErrorException(
-        'Something went wrong - User verification OTP generation failed',
-      );
     }
   }
 
@@ -203,38 +131,66 @@ export class UserService {
         id: foundUser.id,
         ...body,
       });
-      const savedUser = await this.userRepository.save(updatedUser);
-      return savedUser;
+      return await this.userRepository.save(updatedUser);
     } catch (error) {
       this.logger.error(
         { id: `update-a-user-by-id-error` },
         `Update a user by id`,
       );
-      throw new InternalServerErrorException('Something went wrong');
+      throw new InternalServerErrorException(
+        'Something went wrong - unable to update user by id',
+      );
     }
   }
 
-  public async updateRefreshTokenById(id: string, refToken: string) {
-    this.logger.log(`Update a user refresh token by id`);
-
-    let user: UserEntity;
+  public async generateOtpEmailById(id: string): Promise<GenerateUserOtpDto> {
+    this.logger.log(`Generate a user otp by id`);
     try {
-      if (!refToken) {
-        user = await this.findOneById(id);
-        const updatedUser = { ...user, refresh_token: null };
-        return await this.userRepository.save(updatedUser);
-      } else {
-        const hashedToken = await this.hash(refToken);
-        user = await this.findOneById(id);
-        const updatedUser = { ...user, refresh_token: hashedToken };
-        return await this.userRepository.save(updatedUser);
+      const user = await this.findOneById(id);
+      await this.mailService.sendConfirmationEmail(
+        user.email,
+        user.confirmation_token,
+      );
+      return {
+        userId: user.id,
+        message: `Otp code generated and sent via email`,
+      };
+    } catch (error) {
+      this.logger.error(
+        { id: `generate-a-user-otp-by-id` },
+        `Generate a user otp by id`,
+      );
+      throw new InternalServerErrorException('User OTP generation failed');
+    }
+  }
+
+  public async verifyOtpById(
+    id: string,
+    { otp_code }: VerifyUserOtpDto,
+  ): Promise<VerifyMessageDto> {
+    this.logger.log(`Verify a user otp by id`);
+    try {
+      const user = await this.findOneById(id);
+      if (user.confirmation_token === otp_code) {
+        const updatedUser = await this.userRepository.preload({
+          id: user.id,
+          is_verified: true,
+          confirmation_token: null,
+          ...user,
+        });
+        await this.userRepository.save(updatedUser);
+        return {
+          message: 'Account verification successful',
+        };
       }
     } catch (error) {
       this.logger.error(
-        { id: `update-a-user-refresh-token-by-id-error` },
-        `Update a user refresh token by id`,
+        { id: `verify-a-user-otp-by-id` },
+        `Verify a user otp by id`,
       );
-      throw new NotFoundException('User does not exist');
+      throw new InternalServerErrorException(
+        'Something went wrong - User verification OTP generation failed',
+      );
     }
   }
 
@@ -269,7 +225,15 @@ export class UserService {
 
     try {
       const user = await this.findOneByEmail(body.email);
-      return await this.generateOtpById(user.id);
+      if (!user.confirmation_token) {
+        const otp_code = generateOtpCode(6);
+        await this.userRepository.preload({
+          id: user.id,
+          confirmation_token: otp_code,
+          ...user,
+        });
+      }
+      return await this.generateOtpEmailById(user.id);
     } catch (error) {
       this.logger.error(
         { id: `update-a-user-with-forgotten-password-by-email-error` },

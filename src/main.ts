@@ -9,7 +9,9 @@ import { HttpExceptionFilter } from './app.filters';
 import { join } from 'node:path';
 import { cwd } from 'node:process';
 import { Logger, LoggerErrorInterceptor } from 'nestjs-pino';
+import * as PgStore from 'connect-pg-simple';
 import * as express from 'express';
+import * as session from 'express-session';
 import * as passport from 'passport';
 import * as cookieParser from 'cookie-parser';
 import * as compression from 'compression';
@@ -43,6 +45,18 @@ async function bootstrap() {
   app.useStaticAssets(join(cwd(), 'app/client/assets'));
   app.setBaseViewsDir(join(cwd(), 'app/client/views'));
 
+  app.use(
+    session({
+      store: new (PgStore(session))({
+        conString: `${configService.get().services.database.url}`,
+        createTableIfMissing: true,
+        tableName: 'user_sessions',
+      }),
+      secret: `${configService.get().authentication.cookie_token_secret}`,
+      resave: false,
+      saveUninitialized: false,
+    }),
+  );
   app.use(passport.initialize());
   app.use(passport.session());
 

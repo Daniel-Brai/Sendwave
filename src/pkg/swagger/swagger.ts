@@ -40,6 +40,17 @@ export function createSwaggerDocument(app: INestApplication) {
       }),
     );
     const document = SwaggerModule.createDocument(app, options);
+    const filteredEndpoints = Object.keys(document.paths).reduce(
+      (acc, path) => {
+        if (path.startsWith('/api')) {
+          acc[path] = document.paths[path];
+        }
+        return acc;
+      },
+      {},
+    );
+    document.paths = filteredEndpoints;
+
     SwaggerModule.setup('api/docs', app, document, {
       swaggerOptions: {
         requestInterceptor: (req: any) => {

@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectQueue } from '@nestjs/bull';
-import { CONFIRM_REGISTRATION, MAIL_QUEUE } from '../mailer.constants';
+import { REGISTRATION_CONFIRMED, MAIL_QUEUE } from '../mailer.constants';
 import { Queue } from 'bull';
 
 @Injectable()
@@ -10,13 +10,11 @@ export class MailService {
   constructor(@InjectQueue(MAIL_QUEUE) private readonly mailQueue: Queue) {}
 
   public async sendConfirmationEmail(
-    name: string,
     emailAddress: string,
     confirmUrl: string,
   ): Promise<void> {
     try {
-      await this.mailQueue.add(CONFIRM_REGISTRATION, {
-        name,
+      await this.mailQueue.add(REGISTRATION_CONFIRMED, {
         emailAddress,
         confirmUrl,
       });
