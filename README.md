@@ -13,7 +13,8 @@
 
 Sendwave is a versatile email tool designed to simplify your communication needs by effortlessly sending bulk and scheduled emails to reach your contacts at the perfect time.
 
-![image](https://github.com/Daniel-Brai/Sendwave/assets/88239970/e69bfab4-c86b-42ad-8368-19029436cf57)
+![image](https://github.com/Daniel-Brai/Sendwave/assets/88239970/0af27ef3-1a5c-44b0-8245-059fe7646eae)
+
 
 
 ## Features
