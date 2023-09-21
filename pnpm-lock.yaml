@@ -71,6 +71,9 @@ dependencies:
   express-session:
     specifier: ^1.17.3
     version: 1.17.3
+  helmet:
+    specifier: ^7.0.0
+    version: 7.0.0
   nestjs-pino:
     specifier: ^3.4.0
     version: 3.4.0(@nestjs/common@10.2.5)(pino-http@8.5.0)
@@ -4240,6 +4243,11 @@ packages:
   /he@1.2.0:
     resolution: {integrity: sha512-F/1DnUGPopORZi0ni+CvrCgHQ5FyEAHRLSApuYWMmrbSwoN2Mn/7k+Gl38gJnR7yyDZk6WLXwiGod1JOWNDKGw==}
     hasBin: true
+    dev: false
+
+  /helmet@7.0.0:
+    resolution: {integrity: sha512-MsIgYmdBh460ZZ8cJC81q4XJknjG567wzEmv46WOBblDb6TUd3z8/GhgmsM9pn8g2B80tAJ4m5/d3Bi1KrSUBQ==}
+    engines: {node: '>=16.0.0'}
     dev: false
 
   /help-me@4.2.0:

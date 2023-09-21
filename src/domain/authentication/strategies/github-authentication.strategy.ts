@@ -5,7 +5,7 @@ import { Profile, Strategy } from 'passport-github';
 
 @Injectable()
 export class GithubAuthStrategy extends PassportStrategy(Strategy, 'github') {
-  constructor(readonly configService: ConfigService) {
+  constructor(private readonly configService: ConfigService) {
     super({
       clientID: `${
         configService.get().authentication.github.oauth_github_client_id

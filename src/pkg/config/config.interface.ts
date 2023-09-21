@@ -26,7 +26,6 @@ export interface GithubConfig extends IOuathConfig {
 
 export interface MailerConfig {
   smtp: {
-    user: string;
     host: string;
     port: number;
     address: string;

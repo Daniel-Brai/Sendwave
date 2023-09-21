@@ -1,6 +1,8 @@
 import {
   ConflictException,
+  forwardRef,
   Injectable,
+  Inject,
   InternalServerErrorException,
   Logger,
   NotFoundException,
@@ -24,7 +26,7 @@ import {
 import { UserEntity } from '../entities/user.entity';
 import { AuthenticationService } from '../../authentication/services/authentication.service';
 import { MailService } from '@pkg/mailer';
-import { generateOtpCode, generateRandomKey } from '@utils/generators';
+import { generateOtpCode } from '@utils/generators';
 
 @Injectable()
 export class UserService {
@@ -33,6 +35,7 @@ export class UserService {
   constructor(
     @InjectRepository(UserEntity)
     private readonly userRepository: Repository<UserEntity>,
+    @Inject(forwardRef(() => AuthenticationService))
     private readonly authService: AuthenticationService,
     private readonly mailService: MailService,
   ) {}

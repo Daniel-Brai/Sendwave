@@ -52,7 +52,7 @@ import { AuthenticatedGuard } from '../../authentication/guards/authenticated.gu
 import { LocalGuard } from '../../authentication/guards/local-authentication.guard';
 
 @ApiTags('Users')
-@Controller('v1/api/users')
+@Controller('api/v1/users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 

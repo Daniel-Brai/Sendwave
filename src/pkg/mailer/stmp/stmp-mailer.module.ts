@@ -20,7 +20,7 @@ import { join } from 'node:path';
           port: configService.get().services.mailer.smtp.port,
           secure: false,
           auth: {
-            user: configService.get().services.mailer.smtp.user,
+            user: configService.get().services.mailer.smtp.address,
             pass: configService.get().services.mailer.smtp.password,
           },
           tls: {

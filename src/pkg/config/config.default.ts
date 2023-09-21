@@ -26,9 +26,8 @@ export const DEFAULT_CONFIG: ConfigData = {
     },
     mailer: {
       smtp: {
-        user: '',
         host: '',
-        port: 5379,
+        port: 579,
         address: '',
         password: '',
       },

@@ -29,7 +29,7 @@ import { UserModule } from '../user/user.module';
   providers: [
     AuthenticationService,
     LocalAuthStrategy,
-    GithubAuthStrategy,
+    // GithubAuthStrategy,
     AuthenticationSerializer,
   ],
   exports: [AuthenticationService],

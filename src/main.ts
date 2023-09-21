@@ -11,6 +11,7 @@ import { cwd } from 'node:process';
 import { Logger, LoggerErrorInterceptor } from 'nestjs-pino';
 import * as PgStore from 'connect-pg-simple';
 import * as express from 'express';
+import helmet from 'helmet';
 import * as session from 'express-session';
 import * as passport from 'passport';
 import * as cookieParser from 'cookie-parser';
@@ -60,6 +61,14 @@ async function bootstrap() {
   app.use(passport.initialize());
   app.use(passport.session());
 
+  app.use(
+    helmet.contentSecurityPolicy({
+      useDefaults: true,
+      directives: {
+        'img-src': ["'self'", 'https: data:'],
+      },
+    }),
+  );
   app.use(compression({ level: 5, compression: 512 }));
   app.use(express.urlencoded({ extended: true }));
   app.use(cookieParser());

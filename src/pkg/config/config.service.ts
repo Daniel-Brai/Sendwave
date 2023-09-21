@@ -74,7 +74,6 @@ export class ConfigService {
       },
       mailer: {
         smtp: {
-          user: env.SMTP_USER! || defaultConfig.mailer.smtp.user,
           host: env.SMTP_HOST! || defaultConfig.mailer.smtp.host,
           port: parseInt(env.SMTP_PORT!) || defaultConfig.mailer.smtp.port,
           address: env.SMTP_ADDRESS! || defaultConfig.mailer.smtp.address,

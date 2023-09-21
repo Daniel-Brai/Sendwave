@@ -27,7 +27,7 @@ import { GithubAuthGuard } from '../guards/github-authentication.guard';
 import { UserSignupDto } from 'src/domain/user/dtos/user-request.dto';
 
 @ApiTags('Authentication')
-@Controller('v1/api/authentication')
+@Controller('api/v1/authentication')
 export class AuthenticationController {
   constructor(private readonly authService: AuthenticationService) {}
 
