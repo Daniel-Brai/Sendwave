@@ -80,6 +80,9 @@ export class ConfigService {
           password: env.SMTP_PASSWORD! || defaultConfig.mailer.smtp.password,
         },
       },
+      novu: {
+        api_key: env.NOVU_API_KEY! || defaultConfig.novu.api_key,
+      },
       swagger: {
         username: env.SWAGGER_USERNAME! || defaultConfig.swagger.username,
         password: env.SWAGGER_PASSWORD! || defaultConfig.swagger.password,

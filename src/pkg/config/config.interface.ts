@@ -38,6 +38,10 @@ export interface SwaggerConfig {
   password: string;
 }
 
+export interface NovuConfig {
+  api_key: string;
+}
+
 export interface ThrottlerConfig {
   ttl: number;
   limit: number;
@@ -49,6 +53,7 @@ export interface ServicesConfig {
   mailer: MailerConfig;
   swagger: SwaggerConfig;
   throttler: ThrottlerConfig;
+  novu: NovuConfig;
 }
 
 export interface AuthConfig {

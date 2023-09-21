@@ -1,6 +1,8 @@
 import { getSecretKey } from '@utils/transformers';
 import { ConfigData } from './config.interface';
 
+export const secretKey = getSecretKey();
+
 export const DEFAULT_CONFIG: ConfigData = {
   environment: {
     port: 3000,
@@ -40,12 +42,15 @@ export const DEFAULT_CONFIG: ConfigData = {
       ttl: 60,
       limit: 10,
     },
+    novu: {
+      api_key: '',
+    },
   },
   authentication: {
     expiresIn: 30000,
-    cookie_token_secret: getSecretKey(),
-    access_token_secret: getSecretKey(),
-    refresh_token_secret: getSecretKey(),
+    cookie_token_secret: secretKey,
+    access_token_secret: secretKey,
+    refresh_token_secret: secretKey,
     github: {
       oauth_github_client_id: '',
       oauth_callback: '',
