@@ -32,4 +32,10 @@ export class AppService {
       title: 'Forgot Password | Sendwave',
     });
   }
+  
+  public resetPassword(res: Response) {
+    return res.render('account/reset-password', {
+      title: 'Reset Password | Sendwave',
+    });
+  }
 }

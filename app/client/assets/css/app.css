@@ -2,6 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
+::-webkit-scrollbar {
+  @apply w-3.5 h-2;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-gray-100 rounded-full;
+}
+
 @layer base {
   .filepond--assistant {
     position: absolute;
@@ -1054,5 +1062,11 @@
     top: 0;
     bottom: auto;
     margin-top: 14px;
+  }
+}
+
+@layer components {
+  .sidebar {
+    transition:all .4s ease-in-out;
   }
 }

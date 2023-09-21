@@ -46,6 +46,7 @@ async function bootstrap() {
   app.useStaticAssets(join(cwd(), 'app/client/assets'));
   app.setBaseViewsDir(join(cwd(), 'app/client/views'));
 
+  app.disable('x-powered-by');
   app.use(
     session({
       store: new (PgStore(session))({
@@ -80,6 +81,24 @@ async function bootstrap() {
       next: express.NextFunction,
     ) => {
       res.locals.isAuthenticated = IsAuthenticated.bind(null, req);
+      next();
+    },
+  );
+
+  app.use(
+    (
+      req: express.Request,
+      res: express.Response,
+      next: express.NextFunction,
+    ) => {
+      if (
+        (req.url === '/signup' ||
+          req.url === '/login' ||
+          req.url === '/forgot-password') &&
+        req.isAuthenticated()
+      ) {
+        res.redirect('/dashboard');
+      }
       next();
     },
   );

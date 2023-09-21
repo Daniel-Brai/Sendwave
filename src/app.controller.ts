@@ -30,4 +30,9 @@ export class AppController {
   public getForgotPassword(@Res() res: Response) {
     return this.appService.forgotPassword(res);
   }
+  
+  @Get('/reset-password')
+  public getResetPassword(@Res() res: Response) {
+    return this.appService.resetPassword(res);
+  }
 }

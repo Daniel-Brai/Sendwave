@@ -1,0 +1,31 @@
+<%- include('partials/header.ejs', { title: title }); %>
+  <body>  
+    <%- include('partials/navbar.ejs'); %>
+    <section id="error-message" class="py-10 mt-16 flex flex-col items-center justify-center">
+      <div class="flex flex-col items-center justify-center">
+        <h1 class="text-9xl font-bold text-primary-600">
+          <%= statusCode %>
+        </h1>
+        <span aria-hidden="true">¯\_(ツ)_/¯</span>
+        <p class="mt-4 text-xl sm:text-2xl">
+          <% if(msg) { %>
+            <% if (statusCode === 404) { %>
+                Page Not Found
+            <% } else { %>
+              <%= msg %>
+            <% } %>
+          <% } else { %>
+            Oops! Something went wrong
+          <% } %>
+        </p>
+      </div>
+      <div class="my-6 flex items-center justify-center gap-x-4">
+        <% if (isAuthenticated()) { %>
+            <a href="/dashboard" class="text-sm font-semibold leading-6 text-gray-900 px-4 py-2 rounded-lg hover:bg-gray-100">Go to dashboard<span aria-hidden="true">→ </span></a>
+          <% } else { %>
+            <a href="/" class="text-sm font-semibold leading-6 text-gray-900 px-4 py-2 rounded-lg hover:bg-gray-100">Go home <span aria-hidden="true">→ </span></a>
+          <% } %>
+      </div>
+    </section>
+  </body>
+</html>
