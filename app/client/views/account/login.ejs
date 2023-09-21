@@ -1,14 +1,37 @@
 <%- include('../partials/header.ejs', { title: title }); %>
   <body>
     <%- include('../partials/navbar.ejs'); %>
-    <main>
-      <section>
-        <form id="login-form">
-          <%- include('../partials/input.ejs', { id: "", type: "", placeholder: "", required: true }) %>
-          <%- include('../partials/input.ejs', { id: "", type: "", placeholder: "", required: true }) %>
-          <%- include('../partials/input.ejs', { id: "", type: "", placeholder: "", required: true }) %>
-          <%- include('../partials/input.ejs', { id: "", type: "", placeholder: "", required: true }) %>
-        </form>
+    <main class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
+      <div class="sm:mx-auto sm:w-full sm:max-w-sm">
+        <h2 class="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">Sign in to your account</h2>
+      </div>
+      <section class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+        <form class="space-y-6" id="login-form">
+          <div>
+            <label for="email" class="block text-sm font-medium leading-6 text-gray-900">Email address</label>
+            <div class="mt-2">
+              <%- include('../partials/input.ejs', { id: "email", type: "email", placeholder: "", required: true }) %>
+            </div>
+          </div>  
+          <div>
+            <div class="flex items-center justify-between">
+              <label for="password" class="block text-sm font-medium leading-6 text-gray-900">Password</label>
+              <div class="text-sm">
+                <a href="/forgot-password" class="font-semibold text-primary-600 hover:text-primary-500">Forgot password?</a>
+              </div>
+            </div>
+            <div class="mt-2">
+              <%- include('../partials/input.ejs', { id: "password", type: "password", placeholder: "", required: true }) %>
+            </div>
+          </div>
+        <div>
+        <button type="submit" class="flex w-full justify-center rounded-md bg-primary-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-primary-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600">Sign in</button>
+        </div>
+      </form>
+      <p class="mt-10 text-center text-sm text-gray-500">
+        Not a member?
+        <a href="/signup" class="font-semibold leading-6 text-primary-600 hover:text-primary-500">Sign up</a>
+      </p>
       </section>
     </main>
   </body>

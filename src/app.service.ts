@@ -26,4 +26,10 @@ export class AppService {
       title: 'Create an account | Sendwave',
     });
   }
+
+  public forgotPassword(res: Response) {
+    return res.render('account/forgot-password', {
+      title: 'Forgot Password | Sendwave',
+    });
+  }
 }

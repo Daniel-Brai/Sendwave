@@ -25,4 +25,9 @@ export class AppController {
   public getSignup(@Res() res: Response) {
     return this.appService.signup(res);
   }
+
+  @Get('/forgot-password')
+  public getForgotPassword(@Res() res: Response) {
+    return this.appService.forgotPassword(res);
+  }
 }
