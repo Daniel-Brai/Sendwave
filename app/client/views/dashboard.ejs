@@ -1,8 +1,17 @@
 <%- include('partials/header.ejs', { title: title }); %>
   <body>
     <%- include('partials/navbar.ejs'); %>
-    <main>
+    <main class="relative">
       <%- include('partials/side-navbar.ejs'); %>
+      <div class="w-4/5 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+        <% if (action === 'compose-email') { %>
+          <%- include('fragments/mailer.ejs'); %>
+        <% } else if (action === 'contacts') { %>
+          <%- include('fragments/contacts.ejs', { contacts: contacts }); %>
+        <% } else if (action === 'reports') { %>
+          <%- include('fragments/reports.ejs', { reports: reports }); %>
+        <% } %>
+      </div>
     </main>
 </body>
 </html>

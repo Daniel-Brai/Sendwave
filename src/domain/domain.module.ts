@@ -3,6 +3,7 @@ import { DatabaseModule } from '@pkg/database';
 import { AuthenticationModule } from './authentication/authentication.module';
 import { UserModule } from './user/user.module';
 import { UserEntity } from './user/entities/user.entity';
+import { EmailModule } from './email/email.module';
 
 @Module({
   imports: [
@@ -11,6 +12,7 @@ import { UserEntity } from './user/entities/user.entity';
     }),
     AuthenticationModule,
     UserModule,
+    EmailModule,
   ],
   controllers: [],
   providers: [],

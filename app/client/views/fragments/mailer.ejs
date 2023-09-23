@@ -1,22 +1,23 @@
-      <section id="emailing-section" class="mt-12 relative p-4 w-full mx-auto max-w-2xl h-full md:h-auto">
+  <section id="emailing-section" class="relative p-4 sm:w-full mx-auto sm:max-w-3xl h-full md:h-auto">
+        <%- include('../partials/dashboard-header.ejs', { title: "Compose an email", subtitle: "Just enter your necessary details below and we'll take over the rest" });  %>
         <div class="relative p-4 bg-white rounded-lg shadow dark:bg-gray-800 sm:p-5">
           <form action="#">
             <div class="grid gap-4 mb-4 sm:grid-cols-2">
               <div>
                 <label for="stmp_host" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Host</label>
-                <%- include('../partials/input.ejs', {id: "stmp_host", type: "text", placeholder: "smtp.sendgrid.net"}) %>
+                <%- include('../partials/input.ejs', {id: "stmp_host", type: "text", placeholder: "smtp.sendgrid.net", required: "true"}) %>
               </div>
               <div>
                 <label for="smtp_port" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Port</label>
-                <%- include('../partials/input.ejs', {id: "stmp_port", type: "number", placeholder: "28"}) %>
+                <%- include('../partials/input.ejs', {id: "stmp_port", type: "number", placeholder: "28", required: "true"}) %>
               </div>
               <div>
                 <label for="smtp_username" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Username</label>
-                <%- include('../partials/input.ejs', {id: "stmp_username", type: "text", placeholder: "johndoe"}) %>
+                <%- include('../partials/input.ejs', {id: "stmp_username", type: "text", placeholder: "johndoe", required: "true"}) %>
               </div>
               <div>
                 <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</label>
-                <%- include('../partials/input.ejs', {id: "stmp_password", type: "password", placeholder: "******************"}) %>
+                <%- include('../partials/input.ejs', {id: "stmp_password", type: "password", placeholder: "******************", required: "true"}) %>
               </div>
             </div>
             <div class="w-full mb-4 border border-gray-200 rounded-lg bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
@@ -27,7 +28,7 @@
               <div class="flex items-center justify-between px-3 py-2 border-t dark:border-gray-600">
                 <div class="flex space-x-2">
                   <button type="submit" class="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800">
-                    Send message
+                    Send
                   </button>
                   <button class="text-white text-xs inline-flex items-center bg-primary-600 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-4 py-2.5 text-center hover:bg-primary-800">
                     <svg class="mr-1 -ml-1 w-4 h-4" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">

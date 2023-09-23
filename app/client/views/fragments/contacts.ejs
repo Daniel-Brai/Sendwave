@@ -1,0 +1,11 @@
+<section id="contacts-section" class="relative p-4 sm:w-full mx-auto sm:max-w-3xl h-full md:h-auto">
+  <%- include('../partials/dashboard-header.ejs', { title: "Your contacts list", subtitle: "Your personal emailing list for your close contacts" });  %>
+    
+  <div>
+    <% if (contacts) { %>
+
+    <% } else { %>
+      <p class="mt-4 text-xl text-center">🔖 No Contacts Found!</p>
+    <% } %> 
+  <div>
+</section>

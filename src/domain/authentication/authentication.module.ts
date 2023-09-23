@@ -4,7 +4,7 @@ import { PassportModule } from '@nestjs/passport';
 import { ConfigModule, ConfigService } from '@pkg/config';
 import { AuthenticationController } from './controllers/authentication.controller';
 import { AuthenticationService } from './services/authentication.service';
-import { GithubAuthStrategy } from './strategies/github-authentication.strategy';
+// import { GithubAuthStrategy } from './strategies/github-authentication.strategy';
 import { LocalAuthStrategy } from './strategies/local-authentication.strategy';
 import { AuthenticationSerializer } from './providers/session.serializer';
 import { UserModule } from '../user/user.module';

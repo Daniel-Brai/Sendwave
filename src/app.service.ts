@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Response } from 'express';
+import { Response, Request } from 'express';
 
 @Injectable()
 export class AppService {
@@ -9,9 +9,18 @@ export class AppService {
     });
   }
 
-  public dashboard(res: Response) {
+  public about(res: Response) {
+    return res.render('about', {
+      title: 'About | Sendwave - Streamlining the bulk email experience',
+    });
+  }
+
+  public dashboard(res: Response, req: Request) {
     return res.render('dashboard', {
       title: 'Dashboard | Sendwave',
+      action: req.query.action,
+      contacts: null,
+      reports: null,
     });
   }
 
@@ -32,7 +41,7 @@ export class AppService {
       title: 'Forgot Password | Sendwave',
     });
   }
-  
+
   public resetPassword(res: Response) {
     return res.render('account/reset-password', {
       title: 'Reset Password | Sendwave',

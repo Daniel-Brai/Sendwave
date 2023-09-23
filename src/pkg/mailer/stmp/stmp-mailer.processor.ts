@@ -136,4 +136,7 @@ export class MailProcessor {
       );
     }
   }
+
+  @Process()
+  public async sendUserEmail() {}
 }

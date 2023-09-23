@@ -1,0 +1,11 @@
+<section id="reports-section" class="relative p-4 sm:w-full mx-auto sm:max-w-3xl h-full md:h-auto">
+  <%- include('../partials/dashboard-header.ejs', { title: "Your Reports", subtitle: "A timeline of the messages sent to individuals through Sendwave" });  %>
+    
+  <div>
+    <% if (reports) { %>
+
+    <% } else { %>
+      <p class="mt-4 text-xl text-center">📑 No Reports Found!</p>
+    <% } %> 
+  <div>
+</section>
