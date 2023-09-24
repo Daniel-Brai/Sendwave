@@ -7,6 +7,7 @@ import { MailProcessor } from './stmp-mailer.processor';
 import { MailService } from './stmp-mailer.service';
 import { MAIL_QUEUE } from '../mailer.constants';
 import { join } from 'node:path';
+import { cwd } from 'node:process';
 
 @Module({
   imports: [
@@ -34,7 +35,7 @@ import { join } from 'node:path';
           }>`,
         },
         template: {
-          dir: join(__dirname, '../templates'),
+          dir: join(cwd(), 'app/client/views/mailer'),
           adapter: new EjsAdapter(),
           options: { strict: true },
         },

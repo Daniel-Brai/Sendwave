@@ -1,6 +1,5 @@
 import {
   BadRequestException,
-  ForbiddenException,
   forwardRef,
   Inject,
   Injectable,
@@ -23,7 +22,10 @@ export class AuthenticationService {
     private readonly userService: UserService,
   ) {}
 
-  public async login(request: RequestUser): Promise<Express.User> {
+  public async login(
+    response: Response,
+    request: RequestUser,
+  ): Promise<Express.User> {
     this.logger.log(`Login user`);
     try {
       return request.user;
@@ -38,17 +40,18 @@ export class AuthenticationService {
   public async logout(request: RequestUser, response: Response): Promise<void> {
     this.logger.log(`Log out authenticated user`);
     try {
-      request.session.destroy(() => {
-        response.redirect('/');
+      request.session.destroy((err: Error) => {
+        if (err) {
+          throw new InternalServerErrorException('Something went wrong!');
+        }
       });
+      response.redirect('/');
     } catch (error) {
       this.logger.error(
         { id: `log-out-authenticated-user-error` },
         `Log out authenticated user`,
       );
-      throw new InternalServerErrorException(
-        'Something went wrong -unable to log out user',
-      );
+      throw new InternalServerErrorException('Something went wrong!');
     }
   }
 

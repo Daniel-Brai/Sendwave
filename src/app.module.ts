@@ -21,7 +21,7 @@ import { DomainModule } from './domain/domain.module';
         },
       },
     }),
-    // DomainModule,
+    DomainModule,
   ],
   controllers: [AppController],
   providers: [AppService],

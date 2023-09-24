@@ -9,12 +9,6 @@ export class AppService {
     });
   }
 
-  public about(res: Response) {
-    return res.render('about', {
-      title: 'About | Sendwave - Streamlining the bulk email experience',
-    });
-  }
-
   public dashboard(res: Response, req: Request) {
     return res.render('dashboard', {
       title: 'Dashboard | Sendwave',
@@ -45,6 +39,12 @@ export class AppService {
   public resetPassword(res: Response) {
     return res.render('account/reset-password', {
       title: 'Reset Password | Sendwave',
+    });
+  }
+
+  public verifyAccount(res: Response) {
+    return res.render('account/verify-account', {
+      title: 'Verify account | Sendwave',
     });
   }
 }

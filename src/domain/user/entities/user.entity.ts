@@ -26,6 +26,9 @@ export class UserEntity {
   @Column({ type: 'varchar', nullable: true, select: false })
   public confirmation_token: string;
 
+  @Column({ type: 'varchar', length: 6, nullable: true, select: false })
+  public otp_code: string;
+
   @Column({ type: 'boolean', default: false })
   public is_verified: boolean;
 

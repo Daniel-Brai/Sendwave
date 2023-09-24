@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   ConflictException,
   forwardRef,
   Injectable,
@@ -26,7 +27,7 @@ import {
 import { UserEntity } from '../entities/user.entity';
 import { AuthenticationService } from '../../authentication/services/authentication.service';
 import { MailService } from '@pkg/mailer';
-import { generateOtpCode } from '@utils/generators';
+import { generateOtpCode, generateRandomKey } from '@utils/generators';
 
 @Injectable()
 export class UserService {
@@ -107,12 +108,19 @@ export class UserService {
     try {
       const hashedPassword = await this.hash(body.password);
       const otp_code = generateOtpCode(6);
+      const token = generateRandomKey(32);
       const createdUser = this.userRepository.create({
         ...body,
         password: hashedPassword,
-        confirmation_token: otp_code,
+        confirmation_token: token,
+        otp_code: otp_code,
       });
       const user = await this.userRepository.save(createdUser);
+      await this.mailService.sendRegistrationConfirmEmail(
+        user.email,
+        user.otp_code,
+        user.confirmation_token,
+      );
       return user;
     } catch (error) {
       this.logger.error({ id: `create-a-user-error` }, `Create a user`);
@@ -150,8 +158,9 @@ export class UserService {
     this.logger.log(`Generate a user otp by id`);
     try {
       const user = await this.findOneById(id);
-      await this.mailService.sendConfirmationEmail(
+      await this.mailService.sendRegistrationConfirmEmail(
         user.email,
+        user.otp_code,
         user.confirmation_token,
       );
       return {
@@ -174,14 +183,12 @@ export class UserService {
     this.logger.log(`Verify a user otp by id`);
     try {
       const user = await this.findOneById(id);
-      if (user.confirmation_token === otp_code) {
-        const updatedUser = await this.userRepository.preload({
-          id: user.id,
+      if (user.otp_code === otp_code) {
+        await this.updateOneById(user.id, {
           is_verified: true,
+          otp_code: null,
           confirmation_token: null,
-          ...user,
         });
-        await this.userRepository.save(updatedUser);
         return {
           message: 'Account verification successful',
         };
@@ -191,9 +198,7 @@ export class UserService {
         { id: `verify-a-user-otp-by-id` },
         `Verify a user otp by id`,
       );
-      throw new InternalServerErrorException(
-        'Something went wrong - User verification OTP generation failed',
-      );
+      throw new BadRequestException('Verification of OTP code failed!');
     }
   }
 
@@ -226,16 +231,18 @@ export class UserService {
   ): Promise<GenerateUserOtpDto> {
     this.logger.log(`Update a user with forgetten password by email`);
 
+    const user = await this.findOneByEmail(body.email);
+    if (user.is_verified === false) {
+      throw new BadRequestException('You are not verified');
+    }
+
     try {
-      const user = await this.findOneByEmail(body.email);
-      if (!user.confirmation_token) {
-        const otp_code = generateOtpCode(6);
-        await this.userRepository.preload({
-          id: user.id,
-          confirmation_token: otp_code,
-          ...user,
-        });
-      }
+      const otp_code = generateOtpCode(6);
+      await this.userRepository.preload({
+        id: user.id,
+        otp_code: otp_code,
+        ...user,
+      });
       return await this.generateOtpEmailById(user.id);
     } catch (error) {
       this.logger.error(

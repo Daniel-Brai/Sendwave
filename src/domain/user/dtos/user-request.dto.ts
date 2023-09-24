@@ -1,12 +1,12 @@
 import { ApiProperty, PartialType } from '@nestjs/swagger';
 import { MatchPasswords } from '@common/decorators';
 import {
+  IsBoolean,
   IsDefined,
   IsEmail,
   IsObject,
   IsOptional,
   IsString,
-  IsPhoneNumber,
   Matches,
   MaxLength,
   MinLength,
@@ -40,7 +40,38 @@ export class UserSignupDto {
   public password!: string;
 }
 
-export class UpdateUserDto extends PartialType<UserSignupDto>(UserSignupDto) {}
+export class UpdateUserDto extends PartialType<UserSignupDto>(UserSignupDto) {
+  @ApiProperty({
+    description: 'The verified flag of the user',
+    type: Boolean,
+    example: true,
+    required: true,
+  })
+  @IsBoolean()
+  @IsOptional()
+  public is_verified: boolean;
+
+  @ApiProperty({
+    description: 'The token of the user used in otp verification',
+    type: String,
+    example: 'ehfko4r4rp034irpr%ji034034',
+    required: true,
+  })
+  @IsString()
+  @IsOptional()
+  public confirmation_token: string;
+
+  @ApiProperty({
+    description: 'The otp code of the user used in verification',
+    type: String,
+    example: '560721',
+    required: true,
+  })
+  @MaxLength(6)
+  @IsString()
+  @IsOptional()
+  public otp_code: string;
+}
 
 export class ResetPassword {
   @ApiProperty({

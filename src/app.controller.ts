@@ -11,11 +11,6 @@ export class AppController {
     return this.appService.root(res);
   }
 
-  @Get('/about-us')
-  public getAbout(@Res() res: Response) {
-    return this.appService.about(res);
-  }
-
   @Get('/dashboard')
   public getDashboard(@Res() res: Response, @Req() req: Request) {
     return this.appService.dashboard(res, req);
@@ -39,5 +34,10 @@ export class AppController {
   @Get('/reset-password')
   public getResetPassword(@Res() res: Response) {
     return this.appService.resetPassword(res);
+  }
+
+  @Get('/verify-account')
+  public getVerifyAccount(@Res() res: Response) {
+    return this.appService.verifyAccount(res);
   }
 }

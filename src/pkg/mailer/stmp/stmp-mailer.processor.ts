@@ -8,6 +8,7 @@ import {
   Processor,
 } from '@nestjs/bull';
 import {
+  REGISTRATION_CONFIRM,
   REGISTRATION_CONFIRMED,
   INVITE_USER,
   MAIL_QUEUE,
@@ -44,11 +45,41 @@ export class MailProcessor {
     );
   }
 
+  @Process(REGISTRATION_CONFIRM)
+  public async registrationConfirm(
+    job: Job<{
+      emailAddress: string;
+      otp_code: string;
+      confirm_token: string;
+    }>,
+  ) {
+    this.logger.log(
+      `Sending registration confirm email to '${job.data.emailAddress}'`,
+    );
+
+    try {
+      return this.mailerService.sendMail({
+        to: job.data.emailAddress,
+        from: this.configService.get().services.mailer.smtp.address,
+        subject: 'Welcome to Sendwave',
+        template: './registration_confirm',
+        context: {
+          otp_code: job.data.otp_code,
+          confirm_token: job.data.confirm_token,
+          email: job.data.emailAddress,
+        },
+      });
+    } catch {
+      this.logger.error(
+        `Failed to send registration confirm email to '${job.data.emailAddress}'`,
+      );
+    }
+  }
+
   @Process(REGISTRATION_CONFIRMED)
   public async registrationConfirmed(
     job: Job<{
       emailAddress: string;
-      confirmUrl: string;
     }>,
   ) {
     this.logger.log(
@@ -59,16 +90,15 @@ export class MailProcessor {
       return this.mailerService.sendMail({
         to: job.data.emailAddress,
         from: this.configService.get().services.mailer.smtp.address,
-        subject: 'Welcome to Sendwave',
+        subject: 'Thanks for registering for Sendwave',
         template: './registration_confirmed',
         context: {
-          confirmUrl: job.data.confirmUrl,
           email: job.data.emailAddress,
         },
       });
     } catch {
       this.logger.error(
-        `Failed to send confirmation email to '${job.data.emailAddress}'`,
+        `Failed to send registration confirmed email to '${job.data.emailAddress}'`,
       );
     }
   }

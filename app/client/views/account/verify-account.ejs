@@ -3,22 +3,22 @@
     <%- include('../partials/navbar.ejs'); %>
     <main class="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
       <div class="sm:mx-auto sm:w-full sm:max-w-sm">
-        <h2 class="mt-10 text-center mb-2 text-2xl font-bold leading-9 tracking-tight text-gray-900">Forgot your password?</h2>
-        <p class="text-sm text-center text-gray-700">We get it, stuff happens. Just enter your email address below and we'll send you a link with an otp code to reset your password!</p>
+        <h2 class="mt-10 text-center mb-2 text-2xl font-bold leading-9 tracking-tight text-gray-900">Verify your account</h2>
+        <p class="text-sm text-center text-gray-700">Please enter the OTP code sent to your email address below!</p>
       </div>
       <section class="mt-8 sm:mx-auto sm:w-full sm:max-w-sm">
-        <form class="space-y-6" id="forgot-password-form" hx-post="/api/v1/users/forgot-password" hx-ext="json-enc" hx-trigger="submit" hx-target="#message-renderer">
+        <form class="space-y-6" id="forgot-password-form" hx-post="/api/v1/users/verify-account" hx-ext="json-enc" hx-trigger="submit" hx-target="#result">
           <div>
-            <label for="email" class="block text-sm font-medium leading-6 text-gray-900">Email address</label>
+            <label for="otp_code" class="block text-sm font-medium leading-6 text-gray-900">Verification Code</label>
             <div class="mt-2">
-              <%- include('../partials/input.ejs', { id: "email", type: "email", placeholder: "", required: "true" }) %>
+              <%- include('../partials/input.ejs', { id: "otp_code", type: "text", placeholder: "", required: "true" }) %>
             </div>
           </div>  
           <div>
             <button 
               type="submit" 
               class="flex w-full justify-center rounded-md bg-primary-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-primary-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary-600">
-                Reset password
+                Submit code
             </button>
           </div>
         </form>
@@ -28,5 +28,6 @@
         </p>
       </section>
     </main>
+    <script src="js/verify-account.js"></script>
   </body>
 </html>

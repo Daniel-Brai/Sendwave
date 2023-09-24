@@ -3,6 +3,7 @@ module.exports = {
   content: [
     './app/client/views/**/*.{ejs, html}',
     './app/client/assets/js/**/*.{js, ts}',
+    './src/domain/**/*.service.ts',
   ],
   darkMode: 'class',
   theme: {

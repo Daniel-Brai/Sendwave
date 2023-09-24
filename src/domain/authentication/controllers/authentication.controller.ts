@@ -23,8 +23,7 @@ import { Response } from 'express';
 import { AuthenticationService } from '../services/authentication.service';
 import { AuthenticatedGuard } from '../guards/authenticated.guard';
 import { RequestUser } from '@common/interfaces';
-import { GithubAuthGuard } from '../guards/github-authentication.guard';
-import { UserSignupDto } from 'src/domain/user/dtos/user-request.dto';
+import { UserSignupDto } from '../../user/dtos/user-request.dto';
 
 @ApiTags('Authentication')
 @Controller('api/v1/authentication')
@@ -58,25 +57,26 @@ export class AuthenticationController {
   }
 
   @UseGuards(LocalGuard)
-  @Post('/login')
   @HttpCode(HttpStatus.OK)
-  public async login(@Req() request: RequestUser) {
-    return await this.authService.login(request);
+  @ApiOperation({
+    summary: 'Login user',
+    description: 'Return authenticated user to dashboard',
+  })
+  @ApiConsumes('application/json')
+  @Post('/login')
+  public async login(@Res() response: Response, @Req() request: RequestUser) {
+    return await this.authService.login(response, request);
   }
 
   @UseGuards(AuthenticatedGuard)
-  @Get('/logout')
   @HttpCode(HttpStatus.OK)
+  @ApiOperation({
+    summary: 'Logout user',
+    description: 'Destroys a user session',
+  })
+  @ApiConsumes('application/json')
+  @Get('/logout')
   public async logout(@Req() request: RequestUser, @Res() response: Response) {
     return await this.authService.logout(request, response);
   }
-
-  @UseGuards(GithubAuthGuard)
-  @HttpCode(HttpStatus.OK)
-  @ApiOperation({
-    description: 'Login with github',
-    summary: 'Login user with github',
-  })
-  @Get('/github/login')
-  public async githubAuth(@Req() _req: Request) {}
 }
