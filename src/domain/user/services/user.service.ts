@@ -176,19 +176,24 @@ export class UserService {
     }
   }
 
-  public async verifyOtpById(
-    id: string,
+  public async verifyOtpByToken(
+    token: string,
     { otp_code }: VerifyUserOtpDto,
   ): Promise<VerifyMessageDto> {
     this.logger.log(`Verify a user otp by id`);
     try {
-      const user = await this.findOneById(id);
+      const user = await this.userRepository.findOne({
+        where: {
+          confirmation_token: token,
+        },
+      });
       if (user.otp_code === otp_code) {
         await this.updateOneById(user.id, {
           is_verified: true,
           otp_code: null,
           confirmation_token: null,
         });
+        await this.mailService.sendRegistrationConfirmedEmail(user.email);
         return {
           message: 'Account verification successful',
         };

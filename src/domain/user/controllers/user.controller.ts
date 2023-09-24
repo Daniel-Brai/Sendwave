@@ -159,14 +159,13 @@ export class UserController {
     return await this.userService.findAll(pagination_query);
   }
 
-  @UseGuards(LocalGuard)
   @HttpCode(HttpStatus.OK)
   @ApiProperty({
     title: 'Verify OTP',
     description: 'Verify OTP code provided by the user',
     example: {
-      param: {
-        userId: 'd6a7e8a2-5e1d-4c94-96ea-ef5f8c3f8e32',
+      query: {
+        token: 'd6a7e8a2-5e1d-4c94-96ea-ef5f8c3f8e32',
       },
       body: {
         otp_code: '453901',
@@ -191,19 +190,19 @@ export class UserController {
     type: VerifyUserOtpDto,
     required: true,
   })
-  @ApiParam({
-    name: 'userId',
-    description: 'The id provided by the user',
+  @ApiQuery({
+    name: 'token',
+    description: 'The token provided by the user',
     type: String,
     required: true,
   })
   @ApiConsumes('application/json')
-  @Get('/:userId/verify-otp')
+  @Post('/verify-otp')
   public async verifyUserOtp(
-    @Param('userId') userId: string,
+    @Query('token') token: string,
     @Body() body: VerifyUserOtpDto,
   ) {
-    return await this.userService.verifyOtpById(userId, body);
+    return await this.userService.verifyOtpByToken(token, body);
   }
 
   @HttpCode(HttpStatus.OK)

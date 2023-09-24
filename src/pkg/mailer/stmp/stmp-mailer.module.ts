@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { BullModule } from '@nestjs/bull';
 import { MailerModule } from '@nestjs-modules/mailer';
-import { EjsAdapter } from '@nestjs-modules/mailer/dist/adapters/ejs.adapter';
+import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { ConfigModule, ConfigService } from '@pkg/config';
 import { MailProcessor } from './stmp-mailer.processor';
 import { MailService } from './stmp-mailer.service';
@@ -36,7 +36,7 @@ import { cwd } from 'node:process';
         },
         template: {
           dir: join(cwd(), 'app/client/views/mailer'),
-          adapter: new EjsAdapter(),
+          adapter: new HandlebarsAdapter(),
           options: { strict: true },
         },
       }),

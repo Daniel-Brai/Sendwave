@@ -94,7 +94,8 @@ async function bootstrap() {
       if (
         (req.url === '/signup' ||
           req.url === '/login' ||
-          req.url === '/forgot-password') &&
+          req.url === '/forgot-password' ||
+          req.url === '/verify-account') &&
         req.isAuthenticated()
       ) {
         res.redirect('/dashboard');

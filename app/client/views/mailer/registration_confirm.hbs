@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Verify your account -  Snedwave</title>
+</head>
+<body>
+    <p>
+        Hi there, {{ email }}!
+    </p>
+    <p>Verify your email with code below</p>
+    <p>
+        Your verification code is: {{ otp_code }}
+    </p>
+    <p>
+        Click on the link to verify your account:
+        <a href="http://localhost:3000/verify-account?token={{ confirm_token }}">
+          here
+        </a>
+    </p>
+    <p>If you did not request this email you can safely ignore it.</p>
+</body>
+</html>

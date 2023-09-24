@@ -1,4 +1,4 @@
-import { Controller, Get, Res, Req } from '@nestjs/common';
+import { Controller, Get, Res, Req, Query } from '@nestjs/common';
 import { AppService } from './app.service';
 import { Response, Request } from 'express';
 
@@ -37,7 +37,7 @@ export class AppController {
   }
 
   @Get('/verify-account')
-  public getVerifyAccount(@Res() res: Response) {
-    return this.appService.verifyAccount(res);
+  public getVerifyAccount(@Query('token') token: string, @Res() res: Response) {
+    return this.appService.verifyAccount(token, res);
   }
 }

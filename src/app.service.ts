@@ -42,9 +42,10 @@ export class AppService {
     });
   }
 
-  public verifyAccount(res: Response) {
+  public verifyAccount(token: string, res: Response) {
     return res.render('account/verify-account', {
       title: 'Verify account | Sendwave',
+      token: token,
     });
   }
 }

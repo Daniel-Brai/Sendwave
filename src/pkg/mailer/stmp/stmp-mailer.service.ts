@@ -19,6 +19,10 @@ export class MailService {
     confirm_token: string,
   ): Promise<void> {
     try {
+      // const deployedUrl = process.env.LIVE_APP_URL
+      // if (deployedUrl !== null && deployedUrl !== undefined || deployedUrl === '') {
+      //   confirm_token = deployedUrl + confirm_token;
+      // }
       await this.mailQueue.add(REGISTRATION_CONFIRM, {
         emailAddress,
         otp_code,
