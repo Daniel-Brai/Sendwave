@@ -61,9 +61,7 @@ export class AuthenticationService {
       return await this.userService.create(body);
     } catch (error) {
       this.logger.error({ id: `register-user-error` }, `Register user`);
-      throw new InternalServerErrorException(
-        'Something went wrong - unable to register user',
-      );
+      throw new BadRequestException('Something went wrong!');
     }
   }
 

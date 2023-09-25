@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { Response, Request } from 'express';
 
 @Injectable()
@@ -10,12 +10,17 @@ export class AppService {
   }
 
   public dashboard(res: Response, req: Request) {
-    return res.render('dashboard', {
-      title: 'Dashboard | Sendwave',
-      action: req.query.action,
-      contacts: null,
-      reports: null,
-    });
+    try {
+      return res.render('dashboard', {
+        title: 'Dashboard | Sendwave',
+        action: req.query.action,
+        url: req.url,
+        contacts: null,
+        reports: null,
+      });
+    } catch (error) {
+      throw new InternalServerErrorException('Oops! Something went wrong');
+    }
   }
 
   public login(res: Response) {
@@ -45,6 +50,13 @@ export class AppService {
   public verifyAccount(token: string, res: Response) {
     return res.render('account/verify-account', {
       title: 'Verify account | Sendwave',
+      token: token,
+    });
+  }
+
+  public changePassword(token: string, res: Response) {
+    return res.render('account/change-password', {
+      title: 'Change your password | Sendwave',
       token: token,
     });
   }

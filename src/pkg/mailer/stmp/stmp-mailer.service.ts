@@ -3,6 +3,7 @@ import { InjectQueue } from '@nestjs/bull';
 import {
   REGISTRATION_CONFIRM,
   REGISTRATION_CONFIRMED,
+  FORGOT_PASSWORD,
   MAIL_QUEUE,
 } from '../mailer.constants';
 import { Queue } from 'bull';
@@ -47,6 +48,24 @@ export class MailService {
     } catch (error) {
       this.logger.error(
         `Error queueing registration confirmed email to user ${emailAddress}`,
+      );
+
+      throw error;
+    }
+  }
+
+  public async sendForgotPasswordEmail(
+    emailAddress: string,
+    confirm_token: string,
+  ): Promise<void> {
+    try {
+      await this.mailQueue.add(FORGOT_PASSWORD, {
+        emailAddress,
+        confirm_token,
+      });
+    } catch (error) {
+      this.logger.error(
+        `Error queueing forgot password email to user ${emailAddress}`,
       );
 
       throw error;

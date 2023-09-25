@@ -41,6 +41,7 @@ import {
   INTERNAL_SERVER_ERROR,
 } from '@common/constants';
 import {
+  ChangePasswordDto,
   ForgetPasswordDto,
   ResetPasswordDto,
   UpdateUserDto,
@@ -119,7 +120,7 @@ export class UserController {
     return await this.userService.findOneById(userId);
   }
 
-  @UseGuards(AuthenticatedGuard)
+  // @UseGuards(AuthenticatedGuard)
   @HttpCode(HttpStatus.OK)
   @ApiProperty({
     name: 'Get users',
@@ -165,7 +166,7 @@ export class UserController {
     description: 'Verify OTP code provided by the user',
     example: {
       query: {
-        token: 'd6a7e8a2-5e1d-4c94-96ea-ef5f8c3f8e32',
+        token: 'd6a7e8a25e1d4c9496eaef5f8c3f8e32',
       },
       body: {
         otp_code: '453901',
@@ -203,6 +204,46 @@ export class UserController {
     @Body() body: VerifyUserOtpDto,
   ) {
     return await this.userService.verifyOtpByToken(token, body);
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @ApiProperty({
+    title: 'Change password',
+    description: 'Change a user password',
+    example: {
+      body: {
+        new_password: 'ihrtii4u8938i2uie0peow0eiw',
+        new_password_confirmation: 'ihrtii4u8938i2uie0peow0eiw',
+      },
+    },
+    required: true,
+  })
+  @ApiNotFoundResponse({ description: NO_ENTITY_FOUND })
+  @ApiForbiddenResponse({ description: UNAUTHORIZED_REQUEST })
+  @ApiUnprocessableEntityResponse({ description: BAD_REQUEST })
+  @ApiInternalServerErrorResponse({ description: INTERNAL_SERVER_ERROR })
+  @ApiOkResponse({
+    description: 'message for change password returned successfully',
+  })
+  @ApiOperation({
+    summary: 'Change password for user',
+    description: 'Return a message for a verified user',
+  })
+  @ApiOkResponse({
+    description: 'Returns a verification message',
+  })
+  @ApiBody({
+    description: 'The parameters provided by user that change their password',
+    type: ChangePasswordDto,
+    required: true,
+  })
+  @ApiConsumes('application/json')
+  @Post('/change-password')
+  public async changePassword(
+    @Query('token') token: string,
+    @Body() body: ChangePasswordDto,
+  ) {
+    return await this.userService.changePassword(token, body);
   }
 
   @HttpCode(HttpStatus.OK)
@@ -294,7 +335,7 @@ export class UserController {
     return await this.userService.resetPassword(userId, body);
   }
 
-  @UseGuards(AuthenticatedGuard)
+  // @UseGuards(AuthenticatedGuard)
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiProperty({
     title: 'Delete user',

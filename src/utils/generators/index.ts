@@ -11,6 +11,25 @@ export function generateRandomKey(length = 30): string {
 }
 
 /**
+ * This function generates a random alphanumneric key
+ *
+ * @params {number} length - The length of the random toekn
+ * @returns {string} The random token of the given `length`.
+ */
+export function generateAlphanumericToken(length: number) {
+  const charset =
+    'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let token = '';
+
+  for (let i = 0; i < length; i++) {
+    const randomIndex = crypto.randomInt(charset.length);
+    token += charset.charAt(randomIndex);
+  }
+
+  return token;
+}
+
+/**
  * Generates an OTP code
  * @params {number} length - The length of the desired otp code
  * @returns {string} The generated otp code

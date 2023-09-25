@@ -24,6 +24,7 @@ async function bootstrap() {
   const configService = app.get(ConfigService);
   const logger = app.get(Logger);
   const port = configService.get().environment.port;
+  const nodeEnv = configService.get().environment.type;
 
   app.useLogger(logger);
   app.useGlobalPipes(
@@ -37,7 +38,10 @@ async function bootstrap() {
     }),
   );
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
-  app.useGlobalInterceptors(new LoggerErrorInterceptor());
+
+  if (nodeEnv === 'development') {
+    app.useGlobalInterceptors(new LoggerErrorInterceptor());
+  }
   app.useGlobalFilters(new HttpExceptionFilter());
 
   app.enableVersioning();

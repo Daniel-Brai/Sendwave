@@ -12,7 +12,7 @@ import {
   REGISTRATION_CONFIRMED,
   INVITE_USER,
   MAIL_QUEUE,
-  FORGET_PASSWORD,
+  FORGOT_PASSWORD,
 } from '../mailer.constants';
 import { MailerService } from '@nestjs-modules/mailer';
 import { ConfigService } from '@pkg/config';
@@ -135,13 +135,11 @@ export class MailProcessor {
     }
   }
 
-  @Process(FORGET_PASSWORD)
-  public async forgetPassword(
+  @Process(FORGOT_PASSWORD)
+  public async forgotPassword(
     job: Job<{
-      name: string;
-      otp_code: string;
       emailAddress: string;
-      redirectUrl: string;
+      confirm_token: string;
     }>,
   ) {
     this.logger.log(
@@ -155,9 +153,8 @@ export class MailProcessor {
         subject: `Invitation to join Sendwave`,
         template: './forgot_password',
         context: {
-          name: job.data.name,
-          otp_code: job.data.otp_code,
-          redirectUrl: job.data.redirectUrl,
+          email: job.data.emailAddress,
+          confirm_token: job.data.confirm_token,
         },
       });
     } catch {

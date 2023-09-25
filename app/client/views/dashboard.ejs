@@ -2,9 +2,9 @@
   <body>
     <%- include('partials/navbar.ejs'); %>
     <main class="relative">
-      <%- include('partials/side-navbar.ejs'); %>
+      <%- include('partials/sidebar.ejs'); %>
       <div class="w-4/5 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-        <% if (action === 'compose-email') { %>
+        <% if (url === '/dashboard') { %>
           <%- include('fragments/mailer.ejs'); %>
         <% } else if (action === 'contacts') { %>
           <%- include('fragments/contacts.ejs', { contacts: contacts }); %>

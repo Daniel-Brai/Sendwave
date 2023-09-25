@@ -19,6 +19,7 @@ import {
   UserSignupDto,
   UpdateUserDto,
   VerifyUserOtpDto,
+  ChangePasswordDto,
 } from '../dtos/user-request.dto';
 import {
   GenerateUserOtpDto,
@@ -27,7 +28,11 @@ import {
 import { UserEntity } from '../entities/user.entity';
 import { AuthenticationService } from '../../authentication/services/authentication.service';
 import { MailService } from '@pkg/mailer';
-import { generateOtpCode, generateRandomKey } from '@utils/generators';
+import {
+  generateOtpCode,
+  generateAlphanumericToken,
+  generateRandomKey,
+} from '@utils/generators';
 
 @Injectable()
 export class UserService {
@@ -108,9 +113,9 @@ export class UserService {
     try {
       const hashedPassword = await this.hash(body.password);
       const otp_code = generateOtpCode(6);
-      const token = generateRandomKey(32);
+      const token = generateAlphanumericToken(32);
       const createdUser = this.userRepository.create({
-        ...body,
+        email: body.email,
         password: hashedPassword,
         confirmation_token: token,
         otp_code: otp_code,
@@ -178,26 +183,31 @@ export class UserService {
 
   public async verifyOtpByToken(
     token: string,
-    { otp_code }: VerifyUserOtpDto,
+    body: VerifyUserOtpDto,
   ): Promise<VerifyMessageDto> {
     this.logger.log(`Verify a user otp by id`);
+
+    const user = await this.userRepository.findOne({
+      where: {
+        confirmation_token: token,
+      },
+    });
+
+    if (user.otp_code === null || body.otp_code !== user.otp_code) {
+      throw new BadRequestException('Invalid OTP code');
+    }
+
     try {
-      const user = await this.userRepository.findOne({
-        where: {
-          confirmation_token: token,
-        },
+      const updatedUser = await this.updateOneById(user.id, {
+        is_verified: true,
+        otp_code: null,
+        confirmation_token: null,
+        ...user,
       });
-      if (user.otp_code === otp_code) {
-        await this.updateOneById(user.id, {
-          is_verified: true,
-          otp_code: null,
-          confirmation_token: null,
-        });
-        await this.mailService.sendRegistrationConfirmedEmail(user.email);
-        return {
-          message: 'Account verification successful',
-        };
-      }
+      await this.mailService.sendRegistrationConfirmedEmail(updatedUser.email);
+      return {
+        message: 'Account verification successful',
+      };
     } catch (error) {
       this.logger.error(
         { id: `verify-a-user-otp-by-id` },
@@ -207,7 +217,10 @@ export class UserService {
     }
   }
 
-  public async resetPassword(id: string, body: ResetPasswordDto) {
+  public async resetPassword(
+    id: string,
+    body: ResetPasswordDto,
+  ): Promise<VerifyMessageDto> {
     this.logger.log(`Update a logged in user password by id`);
     try {
       const foundUser = await this.findOneById(id);
@@ -216,24 +229,58 @@ export class UserService {
         foundUser.password,
       );
       if (isMatch) {
-        const user = await this.updateOneById(foundUser.id, {
+        await this.updateOneById(foundUser.id, {
           password: body.password_update.new_password,
           ...foundUser,
         });
-        return user;
+        return {
+          message: 'Account reset successfully',
+        };
       }
     } catch (error) {
       this.logger.error(
         { id: `update-a-logged-in-user-password-by-id-error` },
         `Update a logged in user password by id`,
       );
-      throw new NotFoundException('No account associated with this email');
+      throw new BadRequestException(
+        'No account or wrong password associated with this email',
+      );
+    }
+  }
+
+  public async changePassword(
+    token: string,
+    body: ChangePasswordDto,
+  ): Promise<VerifyMessageDto> {
+    this.logger.log(`Change password by token`);
+
+    try {
+      const user = await this.userRepository.findOne({
+        where: {
+          confirmation_token: token,
+        },
+      });
+      const hashedPassword = await this.hash(body.new_password);
+      await this.updateOneById(user.id, {
+        password: hashedPassword,
+        confirmation_token: null,
+        ...user,
+      });
+      return {
+        message: 'Account updated successfully',
+      };
+    } catch (error) {
+      this.logger.error(
+        { id: `change-user-password-error` },
+        `Change password by token`,
+      );
+      throw new BadRequestException('Account update failed!');
     }
   }
 
   public async forgetPassword(
     body: ForgetPasswordDto,
-  ): Promise<GenerateUserOtpDto> {
+  ): Promise<VerifyMessageDto> {
     this.logger.log(`Update a user with forgetten password by email`);
 
     const user = await this.findOneByEmail(body.email);
@@ -242,13 +289,20 @@ export class UserService {
     }
 
     try {
+      const token = generateAlphanumericToken(32);
       const otp_code = generateOtpCode(6);
-      await this.userRepository.preload({
-        id: user.id,
+      const updatedUser = await this.updateOneById(user.id, {
+        confirmation_token: token,
         otp_code: otp_code,
         ...user,
       });
-      return await this.generateOtpEmailById(user.id);
+      await this.mailService.sendForgotPasswordEmail(
+        updatedUser.email,
+        updatedUser.confirmation_token,
+      );
+      return {
+        message: 'Email sent successfully',
+      };
     } catch (error) {
       this.logger.error(
         { id: `update-a-user-with-forgotten-password-by-email-error` },

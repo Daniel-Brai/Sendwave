@@ -110,6 +110,34 @@ export class ResetPassword {
   public new_password_confirmation!: string;
 }
 
+export class ChangePasswordDto {
+  @ApiProperty({
+    description: 'The new password provided by the logged in user',
+    example: 'OjspoHHv*c&6@"Ra{:5Hj#1+NPNtrF',
+    required: true,
+  })
+  @MaxLength(40)
+  @MinLength(4)
+  @Matches(/((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/, {
+    message: 'Your password is too weak',
+  })
+  @IsString()
+  @IsDefined()
+  public new_password!: string;
+
+  @ApiProperty({
+    description: 'The new password provided by the user',
+    example: 'OjspoHHv*c&6@"Ra{:5Hj#1+NPNtrF',
+    required: true,
+  })
+  @MinLength(4)
+  @MaxLength(40)
+  @Validate(MatchPasswords, ['new_password'])
+  @IsString()
+  @IsDefined()
+  public new_password_confirmation!: string;
+}
+
 export class ResetPasswordDto extends PartialType<UserSignupDto>(
   UserSignupDto,
 ) {
@@ -139,6 +167,7 @@ export class VerifyUserOtpDto {
   @ApiProperty({
     description: 'The otp provided by the user to verify their account',
     example: '123456',
+    type: String,
     required: true,
   })
   @MaxLength(6)

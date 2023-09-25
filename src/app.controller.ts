@@ -40,4 +40,12 @@ export class AppController {
   public getVerifyAccount(@Query('token') token: string, @Res() res: Response) {
     return this.appService.verifyAccount(token, res);
   }
+
+  @Get('/change-password')
+  public getChangePassword(
+    @Query('token') token: string,
+    @Res() res: Response,
+  ) {
+    return this.appService.changePassword(token, res);
+  }
 }
