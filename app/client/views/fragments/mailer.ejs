@@ -1,28 +1,110 @@
-  <section id="emailing-section" class="relative p-4 sm:w-full mx-auto sm:max-w-3xl h-full md:h-auto">
+  <section id="emailing-section" class="relative mt-32 p-4 sm:w-full mx-auto sm:max-w-3xl h-full md:h-auto">
         <%- include('../partials/dheader.ejs', { title: "Compose an email", subtitle: "Just enter your necessary details below and we'll take over the rest" });  %>
         <div class="relative p-4 bg-white rounded-lg shadow dark:bg-gray-800 sm:p-5">
-          <form action="#">
+          <form id="composeForm" action="#">
             <div class="grid gap-4 mb-4 sm:grid-cols-2">
               <div>
                 <label for="stmp_host" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Host</label>
-                <%- include('../partials/input.ejs', {id: "stmp_host", type: "text", placeholder: "smtp.sendgrid.net", required: "true"}) %>
+                <%- include('../partials/input.ejs', {id: "stmp_host", type: "text", placeholder: "", required: "true"}) %>
               </div>
               <div>
                 <label for="smtp_port" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Port</label>
-                <%- include('../partials/input.ejs', {id: "stmp_port", type: "number", placeholder: "28", required: "true"}) %>
+                <%- include('../partials/input.ejs', {id: "stmp_port", type: "number", placeholder: "", required: "true"}) %>
               </div>
               <div>
                 <label for="smtp_username" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Username</label>
-                <%- include('../partials/input.ejs', {id: "stmp_username", type: "text", placeholder: "johndoe", required: "true"}) %>
+                <%- include('../partials/input.ejs', {id: "stmp_username", type: "text", placeholder: "", required: "true"}) %>
               </div>
               <div>
                 <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</label>
-                <%- include('../partials/input.ejs', {id: "stmp_password", type: "password", placeholder: "******************", required: "true"}) %>
+                <%- include('../partials/input.ejs', {id: "stmp_password", type: "password", placeholder: "", required: "true"}) %>
+              </div>
+              <div x-data="{
+                recipients: [],
+                newRecipient: '',
+                contextFields: [{ label: '', value: '' }],
+                isValidEmail: function(email) {
+                  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+                },
+                addRecipient: function() {
+                  if (this.isValidEmail(this.newRecipient)) {
+                    const contextData = {};
+                    this.contextFields.forEach((field) => {
+                      if (field.label && field.value) {
+                        contextData[field.label] = field.value;
+                      }
+                    });
+
+                    this.recipients.push({
+                      email: this.newRecipient,
+                      context: contextData,
+                    });
+
+                    this.newRecipient = ''; // Clear the email input
+                    this.contextFields = [{ label: '', value: '' }];
+                  }
+                },
+                removeRecipient: function(index) {
+                  this.recipients.splice(index, 1);
+                },
+              }">
+                <div class="w-[45vw]">
+                  <label for="recipient" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Recipient(s)</label>
+                  <div class="flex items-center space-x-2">
+                    <input type="text" x-model="newRecipient" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                    <template x-for="(field, fieldIndex) in contextFields" :key="fieldIndex">
+                      <div class="flex space-x-2">
+                        <input type="text" x-model="field.label" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="label">
+                        <input type="text" x-model="field.value" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="value">
+                      </div>
+                    </template>
+                    <button title="Add context data" type="button" @click="contextFields.push({ label: '', value: '' })" class="bg-blue-500 text-white px-2 py-1 rounded-full">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M7.5 7.5h-.75A2.25 2.25 0 004.5 9.75v7.5a2.25 2.25 0 002.25 2.25h7.5a2.25 2.25 0 002.25-2.25v-7.5a2.25 2.25 0 00-2.25-2.25h-.75m-6 3.75l3 3m0 0l3-3m-3 3V1.5m6 9h.75a2.25 2.25 0 012.25 2.25v7.5a2.25 2.25 0 01-2.25 2.25h-7.5a2.25 2.25 0 01-2.25-2.25v-.75" />
+                        </svg>
+                    </button>
+                    <button title="Add recipient email" type="button" @click="addRecipient" class="bg-blue-500 text-white px-2 py-1 rounded-full">
+                      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m6-6H6" />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+                <div x-show="recipients.length > 0" x-transition:enter="transition ease-out duration-300 transform" x-transition:enter-start="opacity-0 translate-y-2" x-transition:enter-end="opacity-100 translate-y-0" x-transition:leave="transition ease-in duration-200 transform" x-transition:leave-start="opacity-100 translate-y-0" x-transition:leave-end="opacity-0 translate-y-2" class="mb-4">
+                <div class="mt-3 flex items-center">
+                    <template x-for="(recipient, index) in recipients" :key="index">
+                        <div class="p-2">
+                            <div class="bg-blue-100 p-4 rounded-lg mr-2 relative">
+                                <div class="flex justify-between items-center">
+                                    <span class="text-xs mt-2">email: <span x-text="recipient.email"></span></span>
+                                    <button type="button" @click="removeRecipient(index)" class="absolute top-1 right-1 text-blue-400 bg-white font-bold rounded-full p-1">          
+                                      <svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-3 h-3">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                      </svg>
+                                    </button>
+                                </div>
+                                <div class="mt-2">
+                                    <template x-for="(value, label) in recipient.context" :key="label">
+                                        <div>
+                                            <span class="font-semibold text-gray-600 text-xs">
+                                              <span x-text="label"></span>:
+                                            </span>
+                                            <span class="text-xs" x-text="value"></span>
+                                        </div>
+                                    </template>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+              </div>
+              <input type="hidden" id="recipient_emails" name="recipient_emails" x-bind:value="JSON.stringify(recipients)" />
               </div>
             </div>
+            <div>
+            <label for="message" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your message</label>
             <div class="w-full mb-4 border border-gray-200 rounded-lg bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
               <div class="px-4 py-2 bg-white rounded-t-lg dark:bg-gray-800">
-                <label for="message" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white sr-only">Your message</label>
                 <textarea id="message" rows="4" class="w-full px-0 text-sm text-gray-900 bg-white border-0 dark:bg-gray-800 focus:ring-0 dark:text-white dark:placeholder-gray-400" placeholder="Write a message..." required></textarea>
               </div>
               <div class="flex items-center justify-between px-3 py-2 border-t dark:border-gray-600">
@@ -30,13 +112,71 @@
                   <button type="submit" class="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800">
                     Send
                   </button>
-                  <button class="text-white text-xs inline-flex items-center bg-primary-600 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-4 py-2.5 text-center hover:bg-primary-800">
-                    <svg class="mr-1 -ml-1 w-4 h-4" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                      <path fill-rule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clip-rule="evenodd"></path>
-                    </svg>
-                    Schedule
-                  </button>
+                  
+                  <div class="flex justify-center">
+                    <div
+                      x-data="{
+                        open: false,
+                        toggle() {
+                          if (this.open) {
+                            return this.close()
+                          }
+
+                          this.$refs.button.focus()
+
+                          this.open = true
+                      },
+                      close(focusAfter) {
+                        if (! this.open) return
+
+                        this.open = false
+
+                        focusAfter && focusAfter.focus()
+                      }
+                    }"
+                    x-on:keydown.escape.prevent.stop="close($refs.button)"
+                    x-on:focusin.window="! $refs.panel.contains($event.target) && close()"
+                    x-id="['dropdown-button']"
+                    class="relative"
+                  >
+                    <button
+                      x-ref="button"
+                      x-on:click="toggle()"
+                      :aria-expanded="open"
+                      :aria-controls="$id('dropdown-button')"
+                      type="button"
+                      class="text-white text-xs inline-flex items-center bg-primary-600 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-4 py-2.5 text-center hover:bg-primary-800 shadow"
+                    >
+                      Schedule
+                      <svg class="fill-white" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                      </svg>
+                    </button>
+
+                    <div
+                      x-ref="panel"
+                      x-show="open"
+                      x-transition.origin.top.left
+                      x-on:click.outside="close($refs.button)"
+                      :id="$id('dropdown-button')"
+                      style="display: none;"
+                      class="absolute left-0 mt-2 w-40 rounded-md bg-white shadow-md"
+                  >
+                    <a href="#" class="flex items-center gap-2 w-full first-of-type:rounded-t-md last-of-type:rounded-b-md px-4 py-2.5 text-left text-xs hover:bg-gray-50 disabled:text-gray-500">
+                      Hourly
+                    </a>
+
+                    <a href="#" class="flex items-center gap-2 w-full first-of-type:rounded-t-md last-of-type:rounded-b-md px-4 py-2.5 text-left text-xs hover:bg-gray-50 disabled:text-gray-500">
+                      Weekly
+                    </a>
+
+                    <a href="#" class="flex items-center gap-2 w-full first-of-type:rounded-t-md last-of-type:rounded-b-md px-4 py-2.5 text-left text-xs hover:bg-gray-50 disabled:text-gray-500">
+                      Monthly
+                    </a>
+                  </div>
                 </div>
+              </div>
+              </div>
                 <div class="flex pl-0 space-x-1 sm:pl-2">
                   <button class="inline-flex justify-center items-center p-2 text-gray-500 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600">
                    <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 12 20">

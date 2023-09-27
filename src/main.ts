@@ -67,11 +67,8 @@ async function bootstrap() {
   app.use(passport.session());
 
   app.use(
-    helmet.contentSecurityPolicy({
-      useDefaults: true,
-      directives: {
-        'img-src': ["'self'", 'https: data:'],
-      },
+    helmet({
+      contentSecurityPolicy: false,
     }),
   );
   app.use(compression({ level: 5, compression: 512 }));

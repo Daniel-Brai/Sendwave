@@ -74,6 +74,9 @@ dependencies:
   express-session:
     specifier: ^1.17.3
     version: 1.17.3
+  handlebars:
+    specifier: ^4.7.8
+    version: 4.7.8
   helmet:
     specifier: ^7.0.0
     version: 7.0.0
