@@ -11,8 +11,8 @@ import { AuthenticationModule } from '../authentication/authentication.module';
   imports: [
     TypeOrmModule.forFeature([UserEntity]),
     ConfigModule,
-    forwardRef(() => AuthenticationModule),
     MailModule,
+    forwardRef(() => AuthenticationModule),
   ],
   controllers: [UserController],
   providers: [UserService],

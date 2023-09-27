@@ -4,8 +4,11 @@ import {
   UpdateDateColumn,
   Entity,
   PrimaryGeneratedColumn,
+  OneToMany,
+  JoinColumn,
 } from 'typeorm';
 import { Exclude } from 'class-transformer';
+import { MailContactEntity } from 'src/domain/mail/entities/mail-contact.entity';
 
 @Entity('users')
 export class UserEntity {
@@ -31,6 +34,13 @@ export class UserEntity {
 
   @Column({ type: 'boolean', default: false })
   public is_verified: boolean;
+
+  @OneToMany(() => MailContactEntity, (m: MailContactEntity) => m.owner, {
+    nullable: true,
+    cascade: true,
+  })
+  @JoinColumn({ name: 'contact_owner_id', referencedColumnName: 'owner' })
+  public contacts!: MailContactEntity;
 
   @CreateDateColumn({
     type: 'timestamptz',

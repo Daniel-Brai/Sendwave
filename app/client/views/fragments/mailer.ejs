@@ -16,7 +16,7 @@
                 <%- include('../partials/input.ejs', {id: "stmp_username", type: "text", placeholder: "", required: "true"}) %>
               </div>
               <div>
-                <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</label>
+                <label for="stmp_password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</label>
                 <%- include('../partials/input.ejs', {id: "stmp_password", type: "password", placeholder: "", required: "true"}) %>
               </div>
               <div x-data="{
@@ -54,7 +54,7 @@
                     <input type="text" x-model="newRecipient" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                     <template x-for="(field, fieldIndex) in contextFields" :key="fieldIndex">
                       <div class="flex space-x-2">
-                        <input type="text" x-model="field.label" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="label">
+                        <input id="recipient" type="text" x-model="field.label" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="label">
                         <input type="text" x-model="field.value" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="value">
                       </div>
                     </template>
@@ -71,7 +71,7 @@
                   </div>
                 </div>
                 <div x-show="recipients.length > 0" x-transition:enter="transition ease-out duration-300 transform" x-transition:enter-start="opacity-0 translate-y-2" x-transition:enter-end="opacity-100 translate-y-0" x-transition:leave="transition ease-in duration-200 transform" x-transition:leave-start="opacity-100 translate-y-0" x-transition:leave-end="opacity-0 translate-y-2" class="mb-4">
-                <div class="mt-3 flex items-center">
+                <div class="mt-3 flex items-center flex-wrap">
                     <template x-for="(recipient, index) in recipients" :key="index">
                         <div class="p-2">
                             <div class="bg-blue-100 p-4 rounded-lg mr-2 relative">

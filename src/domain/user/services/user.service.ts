@@ -95,7 +95,7 @@ export class UserService {
     try {
       const user = await this.userRepository.findOne({
         where: {
-          email: email,
+          email: email.toLowerCase(),
         },
       });
       return user;
@@ -115,7 +115,7 @@ export class UserService {
       const otp_code = generateOtpCode(6);
       const token = generateAlphanumericToken(32);
       const createdUser = this.userRepository.create({
-        email: body.email,
+        email: body.email.toLowerCase(),
         password: hashedPassword,
         confirmation_token: token,
         otp_code: otp_code,

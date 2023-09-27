@@ -6,11 +6,12 @@ import { AuthenticationModule } from './authentication/authentication.module';
 import { UserModule } from './user/user.module';
 import { UserEntity } from './user/entities/user.entity';
 import { MailModule } from './mail/mail.module';
+import { MailContactEntity } from './mail/entities/mail-contact.entity';
 
 @Module({
   imports: [
     DatabaseModule.forRoot({
-      entities: [UserEntity],
+      entities: [UserEntity, MailContactEntity],
     }),
     BullModule.forRootAsync({
       imports: [ConfigModule],

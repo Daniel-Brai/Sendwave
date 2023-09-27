@@ -15,7 +15,6 @@ export class AppService {
         title: 'Dashboard | Sendwave',
         action: req.query.action,
         url: req.url,
-        contacts: null,
         reports: null,
       });
     } catch (error) {
