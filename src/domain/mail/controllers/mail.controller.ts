@@ -5,10 +5,12 @@ import {
   Delete,
   HttpCode,
   HttpStatus,
+  UseInterceptors,
   Body,
   Param,
   Query,
 } from '@nestjs/common';
+import { CacheInterceptor, CacheKey, CacheTTL } from '@nestjs/cache-manager';
 import {
   ApiTags,
   ApiBody,
@@ -41,8 +43,53 @@ export class MailController {
 
   @HttpCode(HttpStatus.OK)
   @ApiProperty({
-    name: 'Get users',
-    description: 'Get a paginated view of users',
+    name: 'Get user mailing contacts',
+    description: 'Get a paginated view of user mailing contacts',
+    example: {
+      query: {
+        limit: 50,
+        skip: 10,
+      },
+    },
+    required: true,
+  })
+  @ApiNotFoundResponse({ description: NO_ENTITY_FOUND })
+  @ApiForbiddenResponse({ description: UNAUTHORIZED_REQUEST })
+  @ApiUnprocessableEntityResponse({ description: BAD_REQUEST })
+  @ApiInternalServerErrorResponse({ description: INTERNAL_SERVER_ERROR })
+  @ApiOkResponse({ description: 'User mail contacts returned successfully' })
+  @ApiOperation({
+    summary: 'Get all user mail contacts',
+    description: 'Returns a paginated view of mail contacts of a user',
+  })
+  @ApiOkResponse({
+    description: 'Returns a list of user mail contacts',
+  })
+  @ApiConsumes('application/json')
+  @ApiQuery({
+    name: 'pagination_query',
+    description: 'The parameters passed to the query',
+    type: PageOptionsDto,
+    required: true,
+  })
+  @ApiConsumes('application/json')
+  @UseInterceptors(CacheInterceptor)
+  @CacheTTL(30)
+  @Get('/:userId/contacts')
+  public async findUserMailContacts(
+    @Param('userId') userId: string,
+    @Query('pagination_query') pagination_query: PageOptionsDto,
+  ) {
+    return await this.mailService.findUserMailContacts(
+      userId,
+      pagination_query,
+    );
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @ApiProperty({
+    name: 'Get mail contacts',
+    description: 'Get a paginated view of mail contacts',
     example: {
       query: {
         limit: 50,
@@ -71,6 +118,9 @@ export class MailController {
     required: true,
   })
   @ApiConsumes('application/json')
+  @UseInterceptors(CacheInterceptor)
+  @CacheKey('mail-contacts-list')
+  @CacheTTL(30)
   @Get('/contacts')
   public async findMailContacts(
     @Query('pagination_query') pagination_query: PageOptionsDto,
@@ -156,7 +206,7 @@ export class MailController {
     required: true,
   })
   @ApiConsumes('application/json')
-  @Delete('/:contactId')
+  @Delete('/contacts/:contactId')
   public async deleteMailContact(@Param('contactId') contactId: string) {
     return await this.mailService.deleteMailContact(contactId);
   }

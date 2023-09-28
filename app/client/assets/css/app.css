@@ -6,6 +6,8 @@
   @apply w-3.5 h-2;
 }
 
+[x-cloak] { display: none !important; }
+
 ::-webkit-scrollbar-thumb {
   @apply bg-gray-200 rounded-full;
 }
