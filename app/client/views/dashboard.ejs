@@ -8,7 +8,6 @@
           <%- include('fragments/mailer.ejs'); %>
         <% } else if (action === 'contacts') { %>
           <%- include('fragments/contacts.ejs'); %>
-          <script src='js/dashboard-contacts.js'></script>
         <% } else if (action === 'reports') { %>
           <%- include('fragments/reports.ejs', { reports: reports }); %>
           <script src='js/dashboard-reports.js'></script>

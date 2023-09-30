@@ -22,37 +22,36 @@ export class AuthenticationService {
     private readonly userService: UserService,
   ) {}
 
-  public async login(
+  public login(
     response: Response,
-    request: RequestUser,
-  ): Promise<Express.User> {
+    request: Request,
+  ): { message: string, user: Express.User } {
     this.logger.log(`Login user`);
-    try {
-      return request.user;
-    } catch (error) {
-      this.logger.error({ id: `Login-user-error` }, `Login user`);
-      throw new InternalServerErrorException(
-        'Something went wrong - unable to login user',
-      );
-    }
+    return { message: "User login successful", user: request.user };
   }
 
-  public async logout(request: RequestUser, response: Response): Promise<void> {
+  public logout(request: Request, response: Response): { message: string } {
     this.logger.log(`Log out authenticated user`);
-    try {
-      request.session.destroy((err: Error) => {
-        if (err) {
-          throw new InternalServerErrorException('Something went wrong!');
-        }
-      });
-      response.redirect('/');
-    } catch (error) {
-      this.logger.error(
-        { id: `log-out-authenticated-user-error` },
-        `Log out authenticated user`,
-      );
-      throw new InternalServerErrorException('Something went wrong!');
-    }
+    request.logout((err: Error) => {
+      if (err) {
+        this.logger.error(
+          { id: `log-out-authenticated-user-error` },
+          `Log out authenticated user`,
+        );
+        throw new InternalServerErrorException('Something went wrong!');
+      }
+    });
+    request.session.destroy((err: Error) => {
+      if (err) {
+        this.logger.error(
+          { id: `log-out-authenticated-user-error` },
+          `Log out authenticated user`,
+        );
+        throw new InternalServerErrorException('Something went wrong!');
+      }
+    });
+    return { message: "User logout successful" };
+
   }
 
   public async signup(body: UserSignupDto) {

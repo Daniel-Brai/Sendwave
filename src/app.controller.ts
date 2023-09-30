@@ -1,6 +1,7 @@
 import { Controller, Get, Res, Req, Query } from '@nestjs/common';
 import { AppService } from './app.service';
-import { Response, Request } from 'express';
+import { Response } from 'express';
+import { RequestUser } from '@common/interfaces';
 
 @Controller()
 export class AppController {
@@ -12,7 +13,7 @@ export class AppController {
   }
 
   @Get('/dashboard')
-  public getDashboard(@Res() res: Response, @Req() req: Request) {
+  public getDashboard(@Res() res: Response, @Req() req: RequestUser) {
     return this.appService.dashboard(res, req);
   }
 

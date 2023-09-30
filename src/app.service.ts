@@ -1,4 +1,5 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { RequestUser } from '@common/interfaces';
 import { Response, Request } from 'express';
 
 @Injectable()
@@ -9,13 +10,13 @@ export class AppService {
     });
   }
 
-  public dashboard(res: Response, req: Request) {
+  public dashboard(res: Response, req: RequestUser) {
     try {
       return res.render('dashboard', {
         title: 'Dashboard | Sendwave',
         action: req.query.action,
         url: req.url,
-        reports: null,
+        userId: req.user?.id,
       });
     } catch (error) {
       throw new InternalServerErrorException('Oops! Something went wrong');

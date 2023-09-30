@@ -23,7 +23,7 @@ export class LocalAuthStrategy extends PassportStrategy(Strategy) {
         { id: `validate-user-login-details-error` },
         `Validate user login details`,
       );
-      throw new UnauthorizedException('You are not authorized!');
+      throw new UnauthorizedException('Invalid email or password!');
     }
   }
 }

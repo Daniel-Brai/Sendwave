@@ -22,6 +22,7 @@ export class MailContactEntity {
 
   @ManyToOne(() => UserEntity, (u: UserEntity) => u.contacts, {
     nullable: true,
+    eager: true,
   })
   public owner!: UserEntity;
 

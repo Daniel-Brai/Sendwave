@@ -7,7 +7,6 @@
         <p class="text-sm text-center mt-3 text-gray-700">Please enter the OTP code sent to your email address below!</p>
       </div>
       <section class="mt-8 sm:mx-auto sm:w-full sm:max-w-sm">
-        <div id="message-renderer" class="my-2 mx-auto"></div>      
         <form class="space-y-6" id="verification-form" hx-post="/api/v1/users/verify-otp?token=<%= token %>" hx-ext="json-enc" hx-trigger="submit" hx-target="#message-renderer">
           <div>
             <label for="otp_code" class="block text-sm font-medium leading-6 text-gray-900">Verification Code</label>

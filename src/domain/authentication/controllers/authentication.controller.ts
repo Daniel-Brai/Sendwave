@@ -19,7 +19,7 @@ import {
   ApiProperty,
 } from '@nestjs/swagger';
 import { LocalGuard } from '../guards/local-authentication.guard';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import { AuthenticationService } from '../services/authentication.service';
 import { AuthenticatedGuard } from '../guards/authenticated.guard';
 import { RequestUser } from '@common/interfaces';
@@ -64,8 +64,8 @@ export class AuthenticationController {
   })
   @ApiConsumes('application/json')
   @Post('/login')
-  public async login(@Res() response: Response, @Req() request: RequestUser) {
-    return await this.authService.login(response, request);
+  public login(@Res() response: Response, @Req() request: Request) {
+    return this.authService.login(response, request);
   }
 
   @UseGuards(AuthenticatedGuard)
@@ -76,7 +76,7 @@ export class AuthenticationController {
   })
   @ApiConsumes('application/json')
   @Get('/logout')
-  public async logout(@Req() request: RequestUser, @Res() response: Response) {
-    return await this.authService.logout(request, response);
+  public logout(@Req() request: Request, @Res() response: Response) {
+    return this.authService.logout(request, response);
   }
 }

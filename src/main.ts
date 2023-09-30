@@ -54,13 +54,17 @@ async function bootstrap() {
   app.use(
     session({
       store: new (PgStore(session))({
-        conString: `${configService.get().services.database.url}`,
+        conObject: {
+          connectionString: `${configService.get().services.database.url}`,
+          ssl: true,
+        },
         createTableIfMissing: true,
         tableName: 'user_sessions',
       }),
       secret: `${configService.get().authentication.cookie_token_secret}`,
       resave: false,
       saveUninitialized: false,
+      cookie: { maxAge: 3600000, httpOnly: true, sameSite: 'strict' },
     }),
   );
   app.use(passport.initialize());
@@ -86,24 +90,24 @@ async function bootstrap() {
     },
   );
 
-  app.use(
-    (
-      req: express.Request,
-      res: express.Response,
-      next: express.NextFunction,
-    ) => {
-      if (
-        (req.url === '/signup' ||
-          req.url === '/login' ||
-          req.url === '/forgot-password' ||
-          req.url === '/verify-account') &&
-        req.isAuthenticated()
-      ) {
-        res.redirect('/dashboard');
-      }
-      next();
-    },
-  );
+  // app.use(
+  //   (
+  //     req: express.Request,
+  //     res: express.Response,
+  //     next: express.NextFunction,
+  //   ) => {
+  //     if (
+  //       (req.url === '/signup' ||
+  //         req.url === '/login' ||
+  //         req.url === '/forgot-password' ||
+  //         req.url === '/verify-account') &&
+  //       req.isAuthenticated()
+  //     ) {
+  //       res.redirect('/dashboard');
+  //     }
+  //     next();
+  //   },
+  // );
 
   createSwaggerDocument(app);
 

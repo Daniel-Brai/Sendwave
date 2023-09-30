@@ -23,17 +23,21 @@ logInForm.addEventListener('htmx:afterRequest', function (event) {
   const response = JSON.parse(event.detail.xhr.response);
   const message = response['message'];
 
-  if(message) {
-    if (
+  logInForm.reset();
+
+  if (
+    event.detail.xhr.status === 200 || 
+    event.detail.xhr.status === 201 && 
+    message === 'User login successful'
+  ) {
+    window.location.href = "/dashboard";
+  } else if (
       event.detail.xhr.status === 400 &&
       Array.isArray(message) &&
       message.length >= 0
-    ) {
-      showToast(message[0], 'error');
-    } else {
-      showToast(message, 'error');
-    }
+  ) {
+    showToast(message[0], 'error');
   } else {
-    window.location.href = '/dashboard';
+    showToast(message, 'error');
   }
 });
