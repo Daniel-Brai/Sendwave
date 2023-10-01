@@ -5,9 +5,28 @@ import { Request, Response, NextFunction } from 'express';
 export class AuthMiddleware implements NestMiddleware {
   use(req: Request, res: Response, next: NextFunction) {
     if (req.isAuthenticated()) {
-      res.redirect('/dashboard');
+      if (
+        req.originalUrl.includes('login') || 
+        req.originalUrl.includes('signup') ||
+        req.originalUrl.includes('verify-account') ||
+        req.originalUrl.includes('forgot-password')
+      ) {
+        res.redirect('/dashboard');
+      } else {
+        next();
+      }
     } else {
-      next();
+      if (req.originalUrl.includes('dashboard')) {
+        res.redirect('/login');
+      } else {
+        next();
+      }
     }
   }
 }
+
+
+
+
+
+

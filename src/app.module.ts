@@ -41,6 +41,7 @@ export class AppModule implements NestModule {
         { path: '/signup', method: RequestMethod.GET },
         { path: '/verify-account', method: RequestMethod.GET },
         { path: '/forget-password', method: RequestMethod.GET },
+        { path: '/dashboard', method: RequestMethod.GET },
       );
   }
 }
