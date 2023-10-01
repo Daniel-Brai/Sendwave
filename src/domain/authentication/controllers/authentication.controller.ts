@@ -64,8 +64,8 @@ export class AuthenticationController {
   })
   @ApiConsumes('application/json')
   @Post('/login')
-  public login(@Res() response: Response, @Req() request: Request) {
-    return this.authService.login(response, request);
+  public login(@Req() request: RequestUser) {
+    return this.authService.login(request);
   }
 
   @UseGuards(AuthenticatedGuard)
@@ -76,7 +76,7 @@ export class AuthenticationController {
   })
   @ApiConsumes('application/json')
   @Get('/logout')
-  public logout(@Req() request: Request, @Res() response: Response) {
-    return this.authService.logout(request, response);
+  public logout(@Req() request: RequestUser) {
+    return this.authService.logout(request);
   }
 }

@@ -7,11 +7,10 @@ import {
   Logger,
 } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
-import { Request, Response } from 'express';
 import { UserSignInDto } from '../dtos/auth-request.dto';
 import { UserService } from '../../user/services/user.service';
+import { UserSignupDto } from '../../user/dtos/user-request.dto';
 import { RequestUser } from '@common/interfaces';
-import { UserSignupDto } from 'src/domain/user/dtos/user-request.dto';
 
 @Injectable()
 export class AuthenticationService {
@@ -23,24 +22,14 @@ export class AuthenticationService {
   ) {}
 
   public login(
-    response: Response,
-    request: Request,
-  ): { message: string, user: Express.User } {
+    request: RequestUser,
+  ): Express.User {
     this.logger.log(`Login user`);
-    return { message: "User login successful", user: request.user };
+    return request.user;
   }
 
-  public logout(request: Request, response: Response): { message: string } {
+  public logout(request: RequestUser): { message: string } {
     this.logger.log(`Log out authenticated user`);
-    request.logout((err: Error) => {
-      if (err) {
-        this.logger.error(
-          { id: `log-out-authenticated-user-error` },
-          `Log out authenticated user`,
-        );
-        throw new InternalServerErrorException('Something went wrong!');
-      }
-    });
     request.session.destroy((err: Error) => {
       if (err) {
         this.logger.error(

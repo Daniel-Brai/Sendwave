@@ -1,6 +1,7 @@
 <%- include('partials/header.ejs', { title: title }); %>
   <body>
     <%- include('partials/navbar.ejs'); %>
+    <div id="message-renderer" class="my-4 mx-auto z-100 transition ease-out duration-300"></div>
     <main class="relative">
       <%- include('partials/sidebar.ejs'); %>
       <div class="w-4/5 absolute top-1/2 left-1/2 -translate-x-1/2 p-20 -translate-y-1/2">
@@ -9,10 +10,13 @@
         <% } else if (action === 'contacts') { %>
           <%- include('fragments/contacts.ejs'); %>
         <% } else if (action === 'reports') { %>
-          <%- include('fragments/reports.ejs', { reports: reports }); %>
+          <%- include('fragments/reports.ejs'); %>
           <script src='js/dashboard-reports.js'></script>
         <% } %>
       </div>
     </main>
+    <% if (isAuthenticated()) { %>
+      <script src="js/logout.js"></script>
+    <% } %>
 </body>
 </html>
