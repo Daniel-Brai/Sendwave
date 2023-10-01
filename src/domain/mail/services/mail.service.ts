@@ -102,7 +102,10 @@ export class MailService {
         });
 
         const contacts = new PageDto(entities, pageMetaDto);
-        await this.cacheService.set(`user-mail-contacts-list-${userId}`, contacts);
+        await this.cacheService.set(
+          `user-mail-contacts-list-${userId}`,
+          contacts,
+        );
         return contacts;
       }
     } catch (error) {

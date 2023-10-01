@@ -21,9 +21,7 @@ export class AuthenticationService {
     private readonly userService: UserService,
   ) {}
 
-  public login(
-    request: RequestUser,
-  ): Express.User {
+  public login(request: RequestUser): Express.User {
     this.logger.log(`Login user`);
     return request.user;
   }
@@ -39,8 +37,7 @@ export class AuthenticationService {
         throw new InternalServerErrorException('Something went wrong!');
       }
     });
-    return { message: "User logout successful" };
-
+    return { message: 'User logout successful' };
   }
 
   public async signup(body: UserSignupDto) {

@@ -90,25 +90,6 @@ async function bootstrap() {
     },
   );
 
-  // app.use(
-  //   (
-  //     req: express.Request,
-  //     res: express.Response,
-  //     next: express.NextFunction,
-  //   ) => {
-  //     if (
-  //       (req.url === '/signup' ||
-  //         req.url === '/login' ||
-  //         req.url === '/forgot-password' ||
-  //         req.url === '/verify-account') &&
-  //       req.isAuthenticated()
-  //     ) {
-  //       res.redirect('/dashboard');
-  //     }
-  //     next();
-  //   },
-  // );
-
   createSwaggerDocument(app);
 
   await app.listen(port, async () => {
