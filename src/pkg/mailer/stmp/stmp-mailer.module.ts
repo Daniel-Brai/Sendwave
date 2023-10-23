@@ -34,6 +34,7 @@ import { cwd } from 'node:process';
             configService.get().services.mailer.smtp.address
           }>`,
         },
+        preview: true,
         template: {
           dir: join(cwd(), 'app/client/views/mailer'),
           adapter: new HandlebarsAdapter(),

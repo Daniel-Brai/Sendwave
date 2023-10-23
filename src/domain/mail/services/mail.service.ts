@@ -28,6 +28,8 @@ export class MailService {
     private readonly userService: UserService,
   ) {}
 
+  public async sendMail() {}
+
   public async findMailContacts(
     query: PageOptionsDto,
   ): Promise<PageDto<MailContactEntity>> {
@@ -72,36 +74,24 @@ export class MailService {
 
   public async findUserMailContacts(
     userId: string,
-    query: PageOptionsDto,
-  ): Promise<PageDto<MailContactEntity>> {
-    this.logger.log(`Retrieve user mail contacts in a paginated view`);
+  ): Promise<Array<MailContactEntity>> {
+    this.logger.log(`Retrieve user mail contacts`);
 
     try {
-      const cachedData = await this.cacheService.get<
-        PageDto<MailContactEntity>
-      >(`user-mail-contacts-list-${userId}`);
+      const cachedData = await this.cacheService.get<Array<MailContactEntity>>(
+        `user-mail-contacts-list-${userId}`,
+      );
 
       if (cachedData) {
         return cachedData;
       } else {
-        const queryBuilder =
-          this.mailContactRepository.createQueryBuilder('contact');
-
-        queryBuilder
-          .orderBy('contact.created_at', query.order)
-          .where('contact.owner.id := userId', { userId: userId })
-          .skip(query.skip)
-          .take(query.take);
-
-        const itemCount = await queryBuilder.getCount();
-        const { entities } = await queryBuilder.getRawAndEntities();
-
-        const pageMetaDto = new PageMetaDto({
-          pageOptionsDto: query,
-          itemCount: itemCount,
+        const contacts = await this.mailContactRepository.find({
+          where: {
+            owner: {
+              id: userId,
+            },
+          },
         });
-
-        const contacts = new PageDto(entities, pageMetaDto);
         await this.cacheService.set(
           `user-mail-contacts-list-${userId}`,
           contacts,
@@ -110,8 +100,8 @@ export class MailService {
       }
     } catch (error) {
       this.logger.error(
-        { id: `retrieve-user-mail-contacts-in-paginated-view-error` },
-        `Retrieve user mail contact in a paginated view`,
+        { id: `retrieve-user-mail-contacts-in-error` },
+        `Retrieve user mail contact`,
       );
       throw new InternalServerErrorException('Something went wrong!');
     }
@@ -162,9 +152,12 @@ export class MailService {
 
     try {
       const foundMailContact = await this.findMailContactById(contactId);
-      return await this.mailContactRepository.delete({
+      await this.mailContactRepository.delete({
         id: foundMailContact.id,
       });
+      return {
+        message: 'Contact deleted successfully',
+      };
     } catch (error) {
       this.logger.error(
         { id: `delete-a-mail-contact` },

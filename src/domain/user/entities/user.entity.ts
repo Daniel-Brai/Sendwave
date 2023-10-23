@@ -37,10 +37,11 @@ export class UserEntity {
 
   @OneToMany(() => MailContactEntity, (m: MailContactEntity) => m.owner, {
     nullable: true,
+    eager: true,
     cascade: true,
   })
   @JoinColumn({ name: 'contact_owner_id', referencedColumnName: 'owner' })
-  public contacts!: MailContactEntity;
+  public contacts!: Array<MailContactEntity>;
 
   @CreateDateColumn({
     type: 'timestamptz',

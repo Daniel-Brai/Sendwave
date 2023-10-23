@@ -45,12 +45,6 @@ export class MailController {
   @ApiProperty({
     name: 'Get user mailing contacts',
     description: 'Get a paginated view of user mailing contacts',
-    example: {
-      query: {
-        limit: 50,
-        skip: 10,
-      },
-    },
     required: true,
   })
   @ApiNotFoundResponse({ description: NO_ENTITY_FOUND })
@@ -66,24 +60,11 @@ export class MailController {
     description: 'Returns a list of user mail contacts',
   })
   @ApiConsumes('application/json')
-  @ApiQuery({
-    name: 'pagination_query',
-    description: 'The parameters passed to the query',
-    type: PageOptionsDto,
-    required: true,
-  })
-  @ApiConsumes('application/json')
   @UseInterceptors(CacheInterceptor)
-  @CacheTTL(30)
+  @CacheTTL(5)
   @Get('/:userId/contacts')
-  public async findUserMailContacts(
-    @Param('userId') userId: string,
-    @Query('pagination_query') pagination_query: PageOptionsDto,
-  ) {
-    return await this.mailService.findUserMailContacts(
-      userId,
-      pagination_query,
-    );
+  public async findUserMailContacts(@Param('userId') userId: string) {
+    return await this.mailService.findUserMailContacts(userId);
   }
 
   @HttpCode(HttpStatus.OK)

@@ -3,18 +3,26 @@
 
 <div x-data="{
     contacts: [],
+    notFound: null,
     errorMessage: null,
+    watch: {
+        'contacts': function(value) {
+            console.log('Contacts updated:', value);
+        }
+    },
     fetchContacts: async function() {
+        console.log('Fetching contacts...');
         try {
             const response = await fetch('/api/v1/mail/<%= userId %>/contacts');
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
             const res = await response.json();
-            if (res.data.length === 0) {
-                this.errorMessage = '';
+            if(!res.length) {
+              this.notFound = '🔖 No contacts found!';
             } else {
-                this.contacts = res.data;
+              this.contacts = res;
+              console.log('Contacts fetched successfully');
             }
         } catch (error) {
             this.errorMessage = '😢 Something went wrong!';
@@ -37,7 +45,7 @@
     }
 }" x-init="fetchContacts"> 
       <div class="w-full">
-        <div class="mt-4 mx-auto flex items-center px-10 py-2 justify-between">
+        <div class="mt-4 mb-4 mx-auto flex items-center px-10 py-2 justify-between">
             <div class="bg-white">
                 <label for="table-search" class="sr-only">Search</label>
                   <div class="relative mt-1">
@@ -62,13 +70,16 @@
                 <%- include('../partials/contact-modal.ejs'); %>
               </div>
         </div>
-        <div x-show="errorMessage !== null">
+        <div x-show="notFound !== null" x-transition>
+          <div class="text-lg text-center mt-4 font-normal" x-text="notFound"></div>
+        </div>
+        <div x-show="errorMessage !== null" x-transition>
           <div id="message-box" class="text-lg text-center mt-4 font-normal" x-text="errorMessage"></div>
         </div>
-        <div x-show="!errorMessage">
+        <div x-transition>
           <template x-if="contacts.length > 0">
-                <template x-for="(contact, index) in contacts" :key="contact.id">
-                    <div class="relative flex items-center bg-blue-100 rounded-lg px-2 py-3">
+                <template x-for="(contact, index) in contacts" :key="index">
+                    <div class="relative flex items-center bg-blue-100 rounded-lg px-2 py-3 mb-4">
                         <div class="flex items-center space-x-2">
                           <div class="bg-gray-100 px-2 py-2 flex items-center justify-center rounded-full"> 
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="fill-gray-200 w-6 h-6">
@@ -76,8 +87,8 @@
                             </svg>
                           </div>
                           <div class="ml-4 flex flex-col justify-center space-y-1">
-                            <span class="text-gray-700 text-sm" x-text="contact.name"></span>
-                            <span class="text-gray-700 text-sm" x-text="contact.email"></span>
+                            <span class="text-gray-500 text-sm" x-text="contact.name"></span>
+                            <span class="text-gray-500 text-sm" x-text="contact.email"></span>
                           </div>
                         </div>
                         <button
@@ -92,7 +103,7 @@
                                 </svg>
                             </span>
                         </button>
-                    <div>
+                    </div>
                 </template>
           </template>
       </div>

@@ -6,7 +6,7 @@ export class AuthMiddleware implements NestMiddleware {
   use(req: Request, res: Response, next: NextFunction) {
     if (req.isAuthenticated()) {
       if (
-        req.originalUrl.includes('login') || 
+        req.originalUrl.includes('login') ||
         req.originalUrl.includes('signup') ||
         req.originalUrl.includes('verify-account') ||
         req.originalUrl.includes('forgot-password')
@@ -24,9 +24,3 @@ export class AuthMiddleware implements NestMiddleware {
     }
   }
 }
-
-
-
-
-
-

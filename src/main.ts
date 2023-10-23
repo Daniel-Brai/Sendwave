@@ -20,6 +20,7 @@ import * as compression from 'compression';
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
     bufferLogs: true,
+    cors: true,
   });
   const configService = app.get(ConfigService);
   const logger = app.get(Logger);

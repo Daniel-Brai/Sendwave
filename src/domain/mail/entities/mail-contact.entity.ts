@@ -20,10 +20,7 @@ export class MailContactEntity {
   @Column({ type: 'varchar', nullable: false })
   public email!: string;
 
-  @ManyToOne(() => UserEntity, (u: UserEntity) => u.contacts, {
-    nullable: true,
-    eager: true,
-  })
+  @ManyToOne(() => UserEntity, (u: UserEntity) => u.contacts)
   public owner!: UserEntity;
 
   @CreateDateColumn({
