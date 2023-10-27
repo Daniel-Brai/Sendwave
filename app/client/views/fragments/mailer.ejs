@@ -4,8 +4,48 @@
           <form id="composeForm" action="#">
             <div class="grid gap-4 mb-4 sm:grid-cols-2">
               <div>
-                <label for="service" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email Provider</label>
-                <%- include('../partials/input.ejs', {id: "service", type: "string", placeholder: "", required: "true"}) %>
+                <label for="providers" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Mail Provider</label>
+                <select id="providers" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                  <option selected>Choose a mail provider</option>
+                  <option value="1und1">1und1</option>
+                  <option value="AOL">AOL</option>
+                  <option value="DebugMail.io">DebugMail.io</option>
+                  <option value="DynectEmail">DynectEmail</option>
+                  <option value="FastMail">FastMail</option>
+                  <option value="GandiMail">GandiMail</option>
+                  <option value="Gmail">Gmail</option>
+                  <option value="Godaddy">Godaddy</option>
+                  <option value="GodaddyAsia">GodaddyAsia</option>
+                  <option value="GodaddyEurope">GodaddyEurope</option>
+                  <option value="hot.ee">hot.ee</option>
+                  <option value="Hotmail">Hotmail</option>
+                  <option value="iCloud">iCloud</option>
+                  <option value="mail.ee">mail.ee</option>
+                  <option value="Mail.ru">Mail.ru</option>
+                  <option value="Mailgun">Mailgun</option>
+                  <option value="Mailjet">Mailjet</option>
+                  <option value="Mandrill">Mandrill</option>
+                  <option value="Naver">Naver</option>
+                  <option value="Postmark">Postmark</option>
+                  <option value="QQ">QQ</option>
+                  <option value="QQex">QQex</option>
+                  <option value="SendCloud">SendCloud</option>
+                  <option value="SendGrid">SendGrid</option>
+                  <option value="SES">SES</option>
+                  <option value="Sparkpost">Sparkpost</option>
+                  <option value="Yahoo">Yahoo</option>
+                  <option value="Yandex">Yandex</option>
+                  <option value="Zoho">Zoho</option>
+                </select>
+              </div>
+              <div>
+                <label for="schedule" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Mailing Schedule</label>
+                <select id="schedule" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                  <option selected value="none">None</option>
+                  <option value="hourly">Hourly</option>
+                  <option value="weekly">Weekly</option>
+                  <option value="monthly">Monthly</option>
+                </select>
               </div>
               <div>
                 <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email</label>
@@ -108,71 +148,7 @@
                   <button type="submit" class="inline-flex items-center py-2.5 px-4 text-xs font-medium text-center text-white bg-blue-700 rounded-lg focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-900 hover:bg-blue-800">
                     Send
                   </button>
-                  
-                  <div class="flex justify-center">
-                    <div
-                      x-data="{
-                        open: false,
-                        toggle() {
-                          if (this.open) {
-                            return this.close()
-                          }
-
-                          this.$refs.button.focus()
-
-                          this.open = true
-                      },
-                      close(focusAfter) {
-                        if (! this.open) return
-
-                        this.open = false
-
-                        focusAfter && focusAfter.focus()
-                      }
-                    }"
-                    x-on:keydown.escape.prevent.stop="close($refs.button)"
-                    x-on:focusin.window="! $refs.panel.contains($event.target) && close()"
-                    x-id="['dropdown-button']"
-                    class="relative"
-                  >
-                    <button
-                      x-ref="button"
-                      x-on:click="toggle()"
-                      :aria-expanded="open"
-                      :aria-controls="$id('dropdown-button')"
-                      type="button"
-                      class="text-white text-xs inline-flex items-center bg-primary-600 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-4 py-2.5 text-center hover:bg-primary-800 shadow"
-                    >
-                      Schedule
-                      <svg class="fill-white" xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
-                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
-                      </svg>
-                    </button>
-
-                    <div
-                      x-ref="panel"
-                      x-show="open"
-                      x-transition.origin.top.left
-                      x-on:click.outside="close($refs.button)"
-                      :id="$id('dropdown-button')"
-                      style="display: none;"
-                      class="absolute left-0 mt-2 w-40 rounded-md bg-white shadow-md"
-                  >
-                    <a href="#" class="flex items-center gap-2 w-full first-of-type:rounded-t-md last-of-type:rounded-b-md px-4 py-2.5 text-left text-xs hover:bg-gray-50 disabled:text-gray-500">
-                      Hourly
-                    </a>
-
-                    <a href="#" class="flex items-center gap-2 w-full first-of-type:rounded-t-md last-of-type:rounded-b-md px-4 py-2.5 text-left text-xs hover:bg-gray-50 disabled:text-gray-500">
-                      Weekly
-                    </a>
-
-                    <a href="#" class="flex items-center gap-2 w-full first-of-type:rounded-t-md last-of-type:rounded-b-md px-4 py-2.5 text-left text-xs hover:bg-gray-50 disabled:text-gray-500">
-                      Monthly
-                    </a>
-                  </div>
                 </div>
-              </div>
-              </div>
                 <div class="flex pl-0 space-x-1 sm:pl-2">
                   <button class="inline-flex justify-center items-center p-2 text-gray-500 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600">
                    <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 12 20">
