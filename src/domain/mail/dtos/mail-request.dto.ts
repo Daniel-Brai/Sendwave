@@ -1,6 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsDefined, IsEmail, IsString, Validate } from 'class-validator';
-import { MailContext, MailServiceProvider } from '../mail.constants';
+import {
+  MailContext,
+  MailServiceProvider,
+  MailSchedule,
+} from '../mail.constants';
 
 export class CreateMailContactDto {
   @ApiProperty({
@@ -47,6 +51,17 @@ export class CreateMailReportDto {
   @IsString()
   @IsDefined()
   public message!: string;
+}
+
+export class MailScheduleDto {
+  @ApiProperty({
+    name: 'schedule',
+    description: 'The schedule of the email(s) to be sent',
+    example: 'none',
+    required: true,
+  })
+  @IsDefined()
+  public schedule!: MailSchedule;
 }
 
 export class SendMailDto {

@@ -14,7 +14,6 @@ import { CacheInterceptor, CacheKey, CacheTTL } from '@nestjs/cache-manager';
 import {
   ApiTags,
   ApiBody,
-  ApiQuery,
   ApiConsumes,
   ApiNotFoundResponse,
   ApiForbiddenResponse,
@@ -25,8 +24,13 @@ import {
   ApiUnprocessableEntityResponse,
   ApiProperty,
   ApiParam,
+  ApiQuery,
 } from '@nestjs/swagger';
-import { CreateMailContactDto } from '../dtos/mail-request.dto';
+import {
+  CreateMailContactDto,
+  SendMailDto,
+  MailScheduleDto,
+} from '../dtos/mail-request.dto';
 import { MailService } from '../services/mail.service';
 import { PageOptionsDto } from '@common/dtos';
 import {
@@ -35,6 +39,7 @@ import {
   BAD_REQUEST,
   INTERNAL_SERVER_ERROR,
 } from '@common/constants';
+import { MailSchedule } from '../mail.constants';
 
 @ApiTags('Mail')
 @Controller('api/v1/mail')
@@ -65,6 +70,27 @@ export class MailController {
   @Get('/:userId/contacts')
   public async findUserMailContacts(@Param('userId') userId: string) {
     return await this.mailService.findUserMailContacts(userId);
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @ApiConsumes('application/json')
+  @ApiOperation({
+    summary: 'Send a unscheduled or scheduled email',
+    description: 'Returns a success message',
+  })
+  @ApiBody({
+    type: SendMailDto,
+    description:
+      'The parameters needed to create a scheduled or unscheduled mail',
+  })
+  @ApiQuery({ type: MailScheduleDto })
+  @ApiOkResponse({ description: 'Email(s) sent successfully' })
+  @Post('/send-mail')
+  public async sendUserMail(
+    @Query('schedule') schedule: MailSchedule,
+    @Body() body: SendMailDto,
+  ) {
+    return await this.mailService.sendMail(schedule, body);
   }
 
   @HttpCode(HttpStatus.OK)
