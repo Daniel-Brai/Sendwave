@@ -1,7 +1,6 @@
 # compiled output
 /app/server
 /app/client/assets/js/brackets.ts
-/app/client/assets/js/brackets.js
 /node_modules
 
 # Logs

@@ -1,3 +1,5 @@
+import BracketTemplateEngine from './brackets.js';
+
 const jsonString = document.getElementById('recipient_emails').value;
 
 const decodedJSONString = jsonString.replace(/&quot;/g, '"');

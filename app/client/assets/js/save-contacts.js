@@ -17,9 +17,7 @@ function showToast(message, type) {
                 </div>
         `;
     saveContactsForm.reset();
-    setTimeout(() => {
-      document.getElementById('modal-btn').click();
-    }, 1000);
+    document.getElementById('modal-btn').click();
   } else if (type === 'error') {
     messageModal.innerHTML = `
                 <div id="toast-warning" class="flex items-center mx-auto w-full max-w-xs p-4 mb-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800" role="alert">
