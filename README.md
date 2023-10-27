@@ -18,9 +18,14 @@ Sendwave is a versatile email tool designed to simplify your communication needs
 
 ## Features
 
-- [x] Email streamlining through bulk emails.
-- [ ] Scheduled emails using cron jobs for registered users
-- [x] Ability for optional paramaterized email templates (suitable mass applications)
+- [x] Email streamlining through bulk emails
+- [x] Scheduled emails using cron jobs for registered users
+- [x] Optional parameterized email templates (suitable mass applications)
+
+## Todos 
+- [ ] Design and Implement UI for Dashboard
+- [ ] Link APIs with Frontend UI
+- [ ] Optimize for different email providers (both stmp and others)
 
 ## Installation
 
