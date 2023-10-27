@@ -4,20 +4,16 @@
           <form id="composeForm" action="#">
             <div class="grid gap-4 mb-4 sm:grid-cols-2">
               <div>
-                <label for="stmp_host" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Host</label>
-                <%- include('../partials/input.ejs', {id: "stmp_host", type: "text", placeholder: "", required: "true"}) %>
+                <label for="service" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email Provider</label>
+                <%- include('../partials/input.ejs', {id: "service", type: "string", placeholder: "", required: "true"}) %>
               </div>
               <div>
-                <label for="smtp_port" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Port</label>
-                <%- include('../partials/input.ejs', {id: "stmp_port", type: "number", placeholder: "", required: "true"}) %>
+                <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email</label>
+                <%- include('../partials/input.ejs', {id: "email", type: "email", placeholder: "", required: "true"}) %>
               </div>
               <div>
-                <label for="smtp_username" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Username</label>
-                <%- include('../partials/input.ejs', {id: "stmp_username", type: "text", placeholder: "", required: "true"}) %>
-              </div>
-              <div>
-                <label for="stmp_password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</label>
-                <%- include('../partials/input.ejs', {id: "stmp_password", type: "password", placeholder: "", required: "true"}) %>
+                <label for="password" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Password</label>
+                <%- include('../partials/input.ejs', {id: "password", type: "password", placeholder: "", required: "true"}) %>
               </div>
               <div x-data="{
                 recipients: [],
@@ -51,7 +47,7 @@
                 <div class="w-[45vw]">
                   <label for="recipient" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Recipient(s)</label>
                   <div class="flex items-center space-x-2">
-                    <input type="text" x-model="newRecipient" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                    <input type="email" x-model="newRecipient" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                     <template x-for="(field, fieldIndex) in contextFields" :key="fieldIndex">
                       <div class="flex space-x-2">
                         <input id="recipient" type="text" x-model="field.label" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500" placeholder="label">

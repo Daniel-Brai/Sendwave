@@ -6,14 +6,21 @@ import {
   Logger,
   NotFoundException,
 } from '@nestjs/common';
+import { Queue } from 'bull';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Cache } from 'cache-manager';
 import { MailContactEntity } from '../entities/mail-contact.entity';
 import { Repository } from 'typeorm';
-import { CreateMailContactDto } from '../dtos/mail-request.dto';
+import { CreateMailContactDto, SendMailDto } from '../dtos/mail-request.dto';
 import { PageDto, PageMetaDto, PageOptionsDto } from '@common/dtos';
 import { UserService } from '../../user/services/user.service';
+import {
+  MailSchedule,
+  BATCH_MAIL_QUEUE,
+  SEND_BATCH_MAIL,
+} from '../mail.constants';
+import { InjectQueue } from '@nestjs/bull';
 
 @Injectable()
 export class MailService {
@@ -26,9 +33,74 @@ export class MailService {
     private readonly cacheService: Cache,
     @Inject(forwardRef(() => UserService))
     private readonly userService: UserService,
+    @InjectQueue(BATCH_MAIL_QUEUE)
+    private readonly mailQueue: Queue,
   ) {}
 
-  public async sendMail() {}
+  public async sendMail(
+    query: MailSchedule = 'none',
+    body: SendMailDto,
+  ): Promise<void> {
+    try {
+      if (query === 'hourly') {
+        await this.mailQueue.add(
+          SEND_BATCH_MAIL,
+          {
+            body,
+            query,
+          },
+          {
+            removeOnFail: 5,
+            repeat: {
+              cron: '0 * * * *',
+            },
+          },
+        );
+      } else if (query === 'weekly') {
+        await this.mailQueue.add(
+          SEND_BATCH_MAIL,
+          {
+            body,
+            query,
+          },
+          {
+            removeOnFail: 5,
+            repeat: {
+              cron: '0 3 * * 0',
+            },
+          },
+        );
+      } else if (query === 'monthly') {
+        await this.mailQueue.add(
+          SEND_BATCH_MAIL,
+          {
+            body,
+            query,
+          },
+          {
+            removeOnFail: 5,
+            repeat: {
+              cron: '0 0 28 * *',
+            },
+          },
+        );
+      } else if (query === 'none') {
+        await this.mailQueue.add(
+          SEND_BATCH_MAIL,
+          {
+            body,
+            query,
+          },
+          {
+            removeOnFail: 5,
+          },
+        );
+      }
+    } catch (error) {
+      this.logger.error(`Error queueing email`);
+      throw error;
+    }
+  }
 
   public async findMailContacts(
     query: PageOptionsDto,

@@ -28,6 +28,7 @@ import { cwd } from 'node:process';
             ciphers: 'SSLv3',
             rejectUnauthorized: false,
           },
+          pool: true,
         },
         defaults: {
           from: `"No Reply" <${
