@@ -71,6 +71,32 @@ export class MailController {
   public async findUserMailContacts(@Param('userId') userId: string) {
     return await this.mailService.findUserMailContacts(userId);
   }
+  
+  @HttpCode(HttpStatus.OK)
+  @ApiProperty({
+    name: 'Get user mailing contacts',
+    description: 'Get a paginated view of user mailing contacts',
+    required: true,
+  })
+  @ApiNotFoundResponse({ description: NO_ENTITY_FOUND })
+  @ApiForbiddenResponse({ description: UNAUTHORIZED_REQUEST })
+  @ApiUnprocessableEntityResponse({ description: BAD_REQUEST })
+  @ApiInternalServerErrorResponse({ description: INTERNAL_SERVER_ERROR })
+  @ApiOkResponse({ description: 'User mail contacts returned successfully' })
+  @ApiOperation({
+    summary: 'Search for a user mail contacts by contact name',
+    description: 'Returns a list of mail contacts of a user',
+  })
+  @ApiOkResponse({
+    description: 'Returns a list of user contacts',
+  })
+  @ApiConsumes('application/json')
+  @UseInterceptors(CacheInterceptor)
+  @CacheTTL(5)
+  @Get('/:userId/search-contacts')
+  public async searchUserMailContacts(@Param('userId') userId: string, @Query('name') name: string) {
+    return await this.mailService.searchUserMailContacts(userId, name);
+  }
 
   @HttpCode(HttpStatus.OK)
   @ApiConsumes('application/json')

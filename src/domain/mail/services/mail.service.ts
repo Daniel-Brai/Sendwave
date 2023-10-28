@@ -2,6 +2,7 @@ import {
   Injectable,
   Inject,
   forwardRef,
+  BadRequestException,
   InternalServerErrorException,
   Logger,
   NotFoundException,
@@ -179,6 +180,21 @@ export class MailService {
     }
   }
 
+  public async searchUserMailContacts(userId: string, query: string): Promise<Array<MailContactEntity>> {
+    this.logger.log(`Search mail contacts by user id`)
+    try {
+      const searchResults = await this.mailContactRepository
+        .createQueryBuilder('contact')
+        .where('contact.owner.id = :userId AND contact.name LIKE :query', { userId,  query: `%${query}%` })
+        .getMany();
+
+      return searchResults;
+    } catch(error) {
+      this.logger.error({ id: `search-mail-contacts-by-user-id`}, `Search mail contacts by user id`);
+      throw new BadRequestException('Something went wrong - unable to fetch mail contacts');
+    }  
+  }
+  
   public async createMailContact(
     userId: string,
     body: CreateMailContactDto,
