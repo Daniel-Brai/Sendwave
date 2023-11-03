@@ -2,49 +2,49 @@
   <%- include('../partials/dheader.ejs', { title: "🌟 Your templates", subtitle: "Your personalized templates for repetitive tasks" });  %>
 
 <div x-data="{
-    contacts: [],
+    templates: [],
     notFound: null,
     errorMessage: null,
     search: '',
     watch: {
-        'contacts': function(value) {
-            console.log('Contacts updated:', value);
+        'templates': function(value) {
+            console.log('Templates updated:', value);
         }
     },
-    fetchContacts: async function() {
-        console.log('Fetching contacts...');
+    fetchTemplates: async function() {
+        console.log('Fetching templates...');
         try {
-            const response = await fetch('/api/v1/mail/<%= userId %>/contacts');
+            const response = await fetch('/api/v1/mail/<%= userId %>/templates');
             if (!response.ok) {
                 throw new Error('Network response was not ok');
             }
             const res = await response.json();
             if(!res.length) {
-              this.notFound = '🔖 No contacts found!';
+              this.notFound = '🔖 No templates found!';
             } else {
-              this.contacts = res;
-              console.log('Contacts fetched successfully');
+              this.templates = res;
+              console.log('Templates fetched successfully');
             }
         } catch (error) {
             this.errorMessage = '😢 Something went wrong!';
-            console.error('Error fetching contacts:', error);
+            console.error('Error fetching templates:', error);
         }
     },
-    deleteContact: async function(id, index) {
+    deleteTemplate: async function(id, index) {
         try {
-            const response = await fetch(`/api/v1/mail/contacts/${id}`, {
+            const response = await fetch(`/api/v1/mail/templates/${id}`, {
                 method: 'DELETE',
             });
             if (!response.ok) {
-                throw new Error('Error deleting contact');
+                throw new Error('Error deleting templates');
             }
-            // If successful, remove the contact from the list
-            this.contacts.splice(index, 1);
+            // If successful, remove the templates from the list
+            this.templates.splice(index, 1);
         } catch (error) {
-            console.error('Error deleting contact:', error);
+            console.error('Error deleting template:', error);
         }
     }
-}" x-init="fetchContacts"> 
+}" x-init="fetchTemplates"> 
       <div class="w-full">
         <div class="mt-4 mb-4 mx-auto flex items-center px-10 py-2 justify-between">
             <div class="bg-white">
@@ -59,18 +59,18 @@
                       <input 
                         type="text" 
                         name="name"
-                        hx-get="/api/v1/mail/<%= userId %>/search-contacts"
+                        hx-get="/api/v1/mail/<%= userId %>/search-templates"
                         hx-trigger="keyup changed delay:1200ms, name"
                         hx-target="#search-results"
                         id="search-contacts"
                         class="block p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-primary-500 focus:border-primary-500" 
-                        placeholder="Search your contacts by name"
+                        placeholder="Search your template by name"
                       >
                     </div>
                   </div>
               </div>
               <div class="flex items-center justify-center">
-                <%- include('../partials/contact-modal.ejs'); %>
+                <%- include('../partials/template-modal.ejs'); %>
               </div>
         </div>
         <div id="search-results"></div>
@@ -81,8 +81,8 @@
           <div id="message-box" class="text-lg text-center mt-4 font-normal" x-text="errorMessage"></div>
         </div>
         <div x-transition>
-          <template x-if="contacts.length > 0">
-                <template x-for="(contact, index) in contacts" :key="index">
+          <template x-if="templates.length > 0">
+                <template x-for="(template, index) in templates" :key="index">
                     <div class="relative flex items-center bg-blue-100 rounded-lg px-2 py-3 mb-4">
                         <div class="flex items-center space-x-2">
                           <div class="bg-gray-100 px-2 py-2 flex items-center justify-center rounded-full"> 
@@ -91,16 +91,15 @@
                             </svg>
                           </div>
                           <div class="ml-4 flex flex-col justify-center space-y-1">
-                            <span class="text-gray-500 text-sm" x-text="contact.name"></span>
-                            <span class="text-gray-500 text-sm" x-text="contact.email"></span>
+                            <span class="text-gray-500 text-sm" x-text="template.name"></span>
+                            <span class="text-gray-500 text-sm" x-text="template.content"></span>
                           </div>
                         </div>
                         <button
                             class="absolute top-1 right-1 bg-blue-300 text-white px-1 py-1 rounded-full"
                             title="Delete"
-                            @click="deleteContact(contact.id, index)"
-                            hx-confirm="Are you sure you wish to delete this contact?"
-                            hx-delete="`/api/v1/mail/contacts/${contact.id}`"
+                            @click="deleteTemplate(template.id, index)"
+                            hx-delete="`/api/v1/mail/templates/${template.id}`"
                         >
                             <span>
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
@@ -115,4 +114,3 @@
     </div>
 </div>
 </section>
-<script src="js/dashboard-contacts.js"></script>

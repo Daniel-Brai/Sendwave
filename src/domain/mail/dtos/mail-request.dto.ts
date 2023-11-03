@@ -46,7 +46,8 @@ export class CreateMailTemplateDto {
     name: 'content',
     description: 'The content of the template',
     type: String,
-    example: 'Good day {{ name }}! I am writing to ask for inquiry for the position of {{ position }}',
+    example:
+      'Good day {{ name }}! I am writing to ask for inquiry for the position of {{ position }}',
     required: true,
   })
   @IsString()

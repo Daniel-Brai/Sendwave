@@ -14,7 +14,11 @@ import { Cache } from 'cache-manager';
 import { MailContactEntity } from '../entities/mail-contact.entity';
 import { MailTemplateEntity } from '../entities/mail-template.entity';
 import { Repository } from 'typeorm';
-import { CreateMailContactDto, CreateMailTemplateDto, SendMailDto } from '../dtos/mail-request.dto';
+import {
+  CreateMailContactDto,
+  CreateMailTemplateDto,
+  SendMailDto,
+} from '../dtos/mail-request.dto';
 import { PageDto, PageMetaDto, PageOptionsDto } from '@common/dtos';
 import { UserService } from '../../user/services/user.service';
 import {
@@ -183,6 +187,41 @@ export class MailService {
     }
   }
 
+  public async findUserMailTemplates(
+    userId: string,
+  ): Promise<Array<MailTemplateEntity>> {
+    this.logger.log(`Retrieve user mail templates`);
+
+    try {
+      const cachedData = await this.cacheService.get<Array<MailTemplateEntity>>(
+        `user-mail-templates-list-${userId}`,
+      );
+
+      if (cachedData) {
+        return cachedData;
+      } else {
+        const templates = await this.mailTemplateRepository.find({
+          where: {
+            owner: {
+              id: userId,
+            },
+          },
+        });
+        await this.cacheService.set(
+          `user-mail-templates-list-${userId}`,
+          templates,
+        );
+        return templates;
+      }
+    } catch (error) {
+      this.logger.error(
+        { id: `retrieve-user-mail-templates-error` },
+        `Retrieve user mail templates`,
+      );
+      throw new InternalServerErrorException('Something went wrong!');
+    }
+  }
+
   public async searchUserMailContacts(
     userId: string,
     query: string,
@@ -208,7 +247,7 @@ export class MailService {
       );
     }
   }
-  
+
   public async searchUserMailTemplates(
     userId: string,
     query: string,
@@ -235,7 +274,6 @@ export class MailService {
     }
   }
 
-
   public async createMailTemplate(
     userId: string,
     body: CreateMailTemplateDto,
@@ -250,8 +288,34 @@ export class MailService {
       });
       return await this.mailTemplateRepository.save(mailTemplate);
     } catch (error) {
-      this.logger.log({ id: `create-a-mail-template` }, `Create a mail template`);
-      throw new InternalServerErrorException('Something went wrong - unable to create mail temaplate');
+      this.logger.log(
+        { id: `create-a-mail-template` },
+        `Create a mail template`,
+      );
+      throw new InternalServerErrorException(
+        'Something went wrong - unable to create mail temaplate',
+      );
+    }
+  }
+
+  public async createMailContact(
+    userId: string,
+    body: CreateMailContactDto,
+  ): Promise<MailContactEntity> {
+    this.logger.log(`Create a mail contact`);
+
+    try {
+      const user = await this.userService.findOneById(userId);
+      const mailContact = this.mailContactRepository.create({
+        owner: user,
+        ...body,
+      });
+      return await this.mailContactRepository.save(mailContact);
+    } catch (error) {
+      this.logger.log({ id: `create-a-mail-contact` }, `Create a mail contact`);
+      throw new InternalServerErrorException(
+        'Something went wrong - unable to create mail contact',
+      );
     }
   }
 
@@ -312,6 +376,30 @@ export class MailService {
       this.logger.error(
         { id: `delete-a-mail-contact` },
         `Delete a mail contact`,
+      );
+      throw new InternalServerErrorException('Something went wrong!');
+    }
+  }
+
+  public async deleteMailTemplate(templateId: string) {
+    this.logger.log(`Delete a mail template`);
+
+    try {
+      const foundMailTemplate = await this.mailTemplateRepository.findOne({
+        where: {
+          id: templateId,
+        },
+      });
+      await this.mailTemplateRepository.delete({
+        id: foundMailTemplate.id,
+      });
+      return {
+        message: 'Templates deleted successfully',
+      };
+    } catch (error) {
+      this.logger.error(
+        { id: `delete-a-mail-template` },
+        `Delete a mail template`,
       );
       throw new InternalServerErrorException('Something went wrong!');
     }
