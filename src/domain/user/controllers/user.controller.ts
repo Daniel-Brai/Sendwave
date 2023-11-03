@@ -120,7 +120,7 @@ export class UserController {
     return await this.userService.findOneById(userId);
   }
 
-  // @UseGuards(AuthenticatedGuard)
+  @UseGuards(AuthenticatedGuard)
   @HttpCode(HttpStatus.OK)
   @ApiProperty({
     name: 'Get users',

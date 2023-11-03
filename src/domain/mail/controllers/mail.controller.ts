@@ -71,7 +71,7 @@ export class MailController {
   public async findUserMailContacts(@Param('userId') userId: string) {
     return await this.mailService.findUserMailContacts(userId);
   }
-  
+
   @HttpCode(HttpStatus.OK)
   @ApiProperty({
     name: 'Get user mailing contacts',
@@ -94,7 +94,10 @@ export class MailController {
   @UseInterceptors(CacheInterceptor)
   @CacheTTL(5)
   @Get('/:userId/search-contacts')
-  public async searchUserMailContacts(@Param('userId') userId: string, @Query('name') name: string) {
+  public async searchUserMailContacts(
+    @Param('userId') userId: string,
+    @Query('name') name: string,
+  ) {
     return await this.mailService.searchUserMailContacts(userId, name);
   }
 

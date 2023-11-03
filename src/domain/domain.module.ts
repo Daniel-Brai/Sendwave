@@ -7,11 +7,12 @@ import { UserModule } from './user/user.module';
 import { UserEntity } from './user/entities/user.entity';
 import { MailModule } from './mail/mail.module';
 import { MailContactEntity } from './mail/entities/mail-contact.entity';
+import { MailTemplateEntity } from './mail/entities/mail-template.entity';
 
 @Module({
   imports: [
     DatabaseModule.forRoot({
-      entities: [UserEntity, MailContactEntity],
+      entities: [UserEntity, MailContactEntity, MailTemplateEntity],
     }),
     BullModule.forRootAsync({
       imports: [ConfigModule],

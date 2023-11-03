@@ -1,11 +1,10 @@
-<button id="createContactButton" onclick="document.getElementById('createContactModal').showModal()" class="text-white hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 mr-2 focus:outline-none bg-primary-600">Add contact</button>
+<button id="createContactButton" onclick="document.getElementById('createContactModal').showModal()" class="text-white hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm w-fit px-4 lg:px-5 py-2 lg:py-2.5 mr-2 focus:outline-none bg-primary-600">Add contact</button>
 
 <div class="flex items-center justify-center">
   <dialog id="createContactModal" class="h-1/2 w-11/12 md:w-1/2 p-4 bg-white rounded-md ">
    <div class="flex flex-col w-full h-auto ">
-        <!-- Header -->
         <div class="flex w-full h-auto justify-between items-center">
-            <div class="flex w-full justify-between items-center pb-4 mb-4 rounded-t border-b sm:mb-5">
+            <div class="flex w-full justify-between items-center pb-5 mb-4 rounded-t border-b sm:mb-5">
                 <div class="text-lg font-semibold text-gray-900 dark:text-white">
                     Create Contact
                 </div>
@@ -17,10 +16,9 @@
                 </div>
             </div>
         </div>
-          <!-- Modal Content-->
            <div class="h-auto py-5 px-2 justify-center items-center rounded text-center text-gray-500">
-           <div id="modal-message"></div>
             <form id="create-contact-form" hx-post="/api/v1/mail/<%= userId %>/contacts" hx-ext="json-enc" hx-target="#modal-message" hx-trigger="submit">
+                <div id="modal-message"></div>
                 <div class="space-y-6">
                     <div class="w-full">
                       <label for="name" class="text-left block mb-2 text-sm font-medium text-gray-900 dark:text-white">Name</label>

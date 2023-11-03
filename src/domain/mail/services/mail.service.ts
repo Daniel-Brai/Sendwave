@@ -12,8 +12,9 @@ import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Cache } from 'cache-manager';
 import { MailContactEntity } from '../entities/mail-contact.entity';
+import { MailTemplateEntity } from '../entities/mail-template.entity';
 import { Repository } from 'typeorm';
-import { CreateMailContactDto, SendMailDto } from '../dtos/mail-request.dto';
+import { CreateMailContactDto, CreateMailTemplateDto, SendMailDto } from '../dtos/mail-request.dto';
 import { PageDto, PageMetaDto, PageOptionsDto } from '@common/dtos';
 import { UserService } from '../../user/services/user.service';
 import {
@@ -30,6 +31,8 @@ export class MailService {
   constructor(
     @InjectRepository(MailContactEntity)
     private readonly mailContactRepository: Repository<MailContactEntity>,
+    @InjectRepository(MailTemplateEntity)
+    private readonly mailTemplateRepository: Repository<MailTemplateEntity>,
     @Inject(CACHE_MANAGER)
     private readonly cacheService: Cache,
     @Inject(forwardRef(() => UserService))
@@ -180,37 +183,96 @@ export class MailService {
     }
   }
 
-  public async searchUserMailContacts(userId: string, query: string): Promise<Array<MailContactEntity>> {
-    this.logger.log(`Search mail contacts by user id`)
+  public async searchUserMailContacts(
+    userId: string,
+    query: string,
+  ): Promise<Array<MailContactEntity>> {
+    this.logger.log(`Search mail contacts by user id`);
     try {
       const searchResults = await this.mailContactRepository
         .createQueryBuilder('contact')
-        .where('contact.owner.id = :userId AND contact.name LIKE :query', { userId,  query: `%${query}%` })
+        .where('contact.owner.id = :userId AND contact.name LIKE :query', {
+          userId,
+          query: `%${query}%`,
+        })
         .getMany();
 
       return searchResults;
-    } catch(error) {
-      this.logger.error({ id: `search-mail-contacts-by-user-id`}, `Search mail contacts by user id`);
-      throw new BadRequestException('Something went wrong - unable to fetch mail contacts');
-    }  
+    } catch (error) {
+      this.logger.error(
+        { id: `search-mail-contacts-by-user-id` },
+        `Search mail contacts by user id`,
+      );
+      throw new BadRequestException(
+        'Something went wrong - unable to fetch mail contacts',
+      );
+    }
   }
   
-  public async createMailContact(
+  public async searchUserMailTemplates(
     userId: string,
-    body: CreateMailContactDto,
-  ): Promise<MailContactEntity> {
-    this.logger.log(`Create a mail contact`);
+    query: string,
+  ): Promise<Array<MailTemplateEntity>> {
+    this.logger.log(`Search mail templates by user id and template name`);
+    try {
+      const searchResults = await this.mailTemplateRepository
+        .createQueryBuilder('template')
+        .where('contact.owner.id = :userId AND template.name LIKE :query', {
+          userId,
+          query: `%${query}%`,
+        })
+        .getMany();
+
+      return searchResults;
+    } catch (error) {
+      this.logger.error(
+        { id: `search-mail-templates-by-user-id-and-template-name` },
+        `Search mail templates by user id and template name`,
+      );
+      throw new BadRequestException(
+        'Something went wrong - unable to fetch mail templates',
+      );
+    }
+  }
+
+
+  public async createMailTemplate(
+    userId: string,
+    body: CreateMailTemplateDto,
+  ): Promise<MailTemplateEntity> {
+    this.logger.log(`Create a mail template`);
 
     try {
       const user = await this.userService.findOneById(userId);
-      const mailContact = this.mailContactRepository.create({
+      const mailTemplate = this.mailTemplateRepository.create({
         owner: user,
         ...body,
       });
-      return await this.mailContactRepository.save(mailContact);
+      return await this.mailTemplateRepository.save(mailTemplate);
     } catch (error) {
-      this.logger.log({ id: `create-a-mail-contact` }, `Create a mail contact`);
-      throw new InternalServerErrorException('Something went wrong!');
+      this.logger.log({ id: `create-a-mail-template` }, `Create a mail template`);
+      throw new InternalServerErrorException('Something went wrong - unable to create mail temaplate');
+    }
+  }
+
+  public async findMailTemplateByName(
+    templateName: string,
+  ): Promise<MailTemplateEntity> {
+    this.logger.log(`Find a mail template by name`);
+
+    try {
+      const mailTemplate = await this.mailTemplateRepository.findOne({
+        where: {
+          name: templateName,
+        },
+      });
+      return mailTemplate;
+    } catch (error) {
+      this.logger.error(
+        { id: `find-a-mail-template-by-anme` },
+        `Find a mail contact by name`,
+      );
+      throw new NotFoundException(`Template ${templateName} not found!`);
     }
   }
 

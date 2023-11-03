@@ -10,7 +10,9 @@
           <script type="module" src="js/dashboard.js"></script>
         <% } else if (action === 'contacts') { %>
           <%- include('fragments/contacts.ejs'); %>
-        <% }  %>
+        <% } else if (action === 'templates') { %>
+          <%- include('fragments/template-maker.ejs'); %>
+        <% } %>
       </div>
     </main>
     <% if (isAuthenticated()) { %>

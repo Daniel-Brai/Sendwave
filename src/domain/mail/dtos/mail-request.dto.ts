@@ -30,6 +30,30 @@ export class CreateMailContactDto {
   public email!: string;
 }
 
+export class CreateMailTemplateDto {
+  @ApiProperty({
+    name: 'name',
+    description: 'The name of the mail templates',
+    type: String,
+    example: 'Basic application templates',
+    required: true,
+  })
+  @IsString()
+  @IsDefined()
+  public name!: string;
+
+  @ApiProperty({
+    name: 'content',
+    description: 'The content of the template',
+    type: String,
+    example: 'Good day {{ name }}! I am writing to ask for inquiry for the position of {{ position }}',
+    required: true,
+  })
+  @IsString()
+  @IsDefined()
+  public content!: string;
+}
+
 export class CreateMailReportDto {
   @ApiProperty({
     name: 'recipient',

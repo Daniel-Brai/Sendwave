@@ -1,4 +1,5 @@
-import BracketTemplateEngine from './brackets.js';
+import BracketTemplateEngine from './brackets.min.js';
+import * as marked from './marked.min.js'
 
 const jsonString = document.getElementById('recipient_emails').value;
 

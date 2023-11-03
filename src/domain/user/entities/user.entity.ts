@@ -8,7 +8,8 @@ import {
   JoinColumn,
 } from 'typeorm';
 import { Exclude } from 'class-transformer';
-import { MailContactEntity } from 'src/domain/mail/entities/mail-contact.entity';
+import { MailContactEntity } from '../../mail/entities/mail-contact.entity';
+import { MailTemplateEntity } from '../../mail/entities/mail-template.entity';
 
 @Entity('users')
 export class UserEntity {
@@ -42,6 +43,14 @@ export class UserEntity {
   })
   @JoinColumn({ name: 'contact_owner_id', referencedColumnName: 'owner' })
   public contacts!: Array<MailContactEntity>;
+
+  @OneToMany(() => MailTemplateEntity, (m: MailTemplateEntity) => m.owner, {
+    nullable: true,
+    eager: true,
+    cascade: true,
+  })
+  @JoinColumn({ name: 'templates_owner_id', referencedColumnName: 'owner' })
+  public templates!: Array<MailTemplateEntity>;
 
   @CreateDateColumn({
     type: 'timestamptz',
