@@ -11,10 +11,10 @@ import { UserEntity } from '../../user/entities/user.entity';
 
 @Entity('MailTemplates')
 export class MailTemplateEntity {
-  @PrimaryGeneratedColumn('uuid')
-  public id!: string;
+  @PrimaryGeneratedColumn('increment')
+  public id!: number;
 
-  @Column({ type: 'varchar', nullable: false })
+  @Column({ type: 'varchar', nullable: false, unique: true })
   public name!: string;
 
   @Column({ type: 'varchar', nullable: false })

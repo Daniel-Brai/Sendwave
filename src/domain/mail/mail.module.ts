@@ -8,13 +8,12 @@ import { BATCH_MAIL_QUEUE } from './mail.constants';
 import { MailService } from './services/mail.service';
 import { MailProcessor } from './services/mail.processor';
 import { MailContactEntity } from './entities/mail-contact.entity';
-import { MailTemplateEntity } from './entities/mail-template.entity';
 import { MailController } from './controllers/mail.controller';
 import { UserModule } from '../user/user.module';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([MailContactEntity, MailTemplateEntity]),
+    TypeOrmModule.forFeature([MailContactEntity]),
     CacheModule.registerAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({

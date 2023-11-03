@@ -14,13 +14,7 @@ import { Cache } from 'cache-manager';
 import { MailContactEntity } from '../entities/mail-contact.entity';
 import { MailTemplateEntity } from '../entities/mail-template.entity';
 import { Repository } from 'typeorm';
-import {
-  CreateMailContactDto,
-  CreateMailTemplateDto,
-  SendMailDto,
-  UpdateMailContactDto,
-  UpdateMailTemplateDto,
-} from '../dtos/mail-request.dto';
+import { CreateMailContactDto, CreateMailTemplateDto, SendMailDto } from '../dtos/mail-request.dto';
 import { PageDto, PageMetaDto, PageOptionsDto } from '@common/dtos';
 import { UserService } from '../../user/services/user.service';
 import {
@@ -29,7 +23,6 @@ import {
   SEND_BATCH_MAIL,
 } from '../mail.constants';
 import { InjectQueue } from '@nestjs/bull';
-import { IntersectionType } from '@nestjs/swagger';
 
 @Injectable()
 export class MailService {
@@ -190,41 +183,6 @@ export class MailService {
     }
   }
 
-  public async findUserMailTemplates(
-    userId: string,
-  ): Promise<Array<MailTemplateEntity>> {
-    this.logger.log(`Retrieve user mail templates`);
-
-    try {
-      const cachedData = await this.cacheService.get<Array<MailTemplateEntity>>(
-        `user-mail-templates-list-${userId}`,
-      );
-
-      if (cachedData) {
-        return cachedData;
-      } else {
-        const templates = await this.mailTemplateRepository.find({
-          where: {
-            owner: {
-              id: userId,
-            },
-          },
-        });
-        await this.cacheService.set(
-          `user-mail-templates-list-${userId}`,
-          templates,
-        );
-        return templates;
-      }
-    } catch (error) {
-      this.logger.error(
-        { id: `retrieve-user-mail-templates-error` },
-        `Retrieve user mail templates`,
-      );
-      throw new InternalServerErrorException('Something went wrong!');
-    }
-  }
-
   public async searchUserMailContacts(
     userId: string,
     query: string,
@@ -250,7 +208,7 @@ export class MailService {
       );
     }
   }
-
+  
   public async searchUserMailTemplates(
     userId: string,
     query: string,
@@ -277,26 +235,6 @@ export class MailService {
     }
   }
 
-  public async createMailContact(
-    userId: string,
-    body: CreateMailContactDto,
-  ): Promise<MailContactEntity> {
-    this.logger.log(`Create a mail contact`);
-
-    try {
-      const user = await this.userService.findOneById(userId);
-      const mailContact = this.mailContactRepository.create({
-        owner: user,
-        ...body,
-      });
-      return await this.mailContactRepository.save(mailContact);
-    } catch (error) {
-      this.logger.log({ id: `create-a-mail-contact` }, `Create a mail contact`);
-      throw new InternalServerErrorException(
-        'Something went wrong - unable to create mail contact',
-      );
-    }
-  }
 
   public async createMailTemplate(
     userId: string,
@@ -312,13 +250,8 @@ export class MailService {
       });
       return await this.mailTemplateRepository.save(mailTemplate);
     } catch (error) {
-      this.logger.log(
-        { id: `create-a-mail-template` },
-        `Create a mail template`,
-      );
-      throw new InternalServerErrorException(
-        'Something went wrong - unable to create mail temaplate',
-      );
+      this.logger.log({ id: `create-a-mail-template` }, `Create a mail template`);
+      throw new InternalServerErrorException('Something went wrong - unable to create mail temaplate');
     }
   }
 
@@ -361,82 +294,6 @@ export class MailService {
         `Find a mail contact by id`,
       );
       throw new NotFoundException('Contact not found!');
-    }
-  }
-
-  public async updateMailContactById(
-    contactId: string,
-    body: UpdateMailContactDto,
-  ) {
-    this.logger.log(`Update mail contact by id`);
-    try {
-      const foundMailContact = await this.findMailContactById(contactId);
-      const updatedContact = await this.mailContactRepository.preload({
-        id: foundMailContact.id,
-        name: body.name || foundMailContact.name,
-        email: body.email || foundMailContact.email,
-        owner: foundMailContact.owner,
-      });
-      return await this.mailContactRepository.save(updatedContact);
-    } catch (error) {
-      this.logger.error(
-        { id: `update-mail-contact-by-id` },
-        `Update mail contact by id`,
-      );
-      throw new InternalServerErrorException(
-        'Something went wrong - unable to update mail contact',
-      );
-    }
-  }
-
-  public async updateMailTemplateByName(
-    templateName: string,
-    body: UpdateMailTemplateDto,
-  ) {
-    this.logger.log(`Update mail template by name`);
-    try {
-      const foundMailTemplate = await this.findMailTemplateByName(templateName);
-      const updatedMailTemplate = await this.mailTemplateRepository.preload({
-        id: foundMailTemplate.id,
-        name: body.name || foundMailTemplate.name,
-        content: body.content || foundMailTemplate.content,
-        owner: foundMailTemplate.owner,
-      });
-      return await this.mailTemplateRepository.save(updatedMailTemplate);
-    } catch (error) {
-      this.logger.error(
-        { id: `update-mail-template-by-name` },
-        `Update mail template by name`,
-      );
-      throw new InternalServerErrorException(
-        'Something went wrong - unable to update mail template',
-      );
-    }
-  }
-
-  public async deleteMailTemplate(templateId: string) {
-    this.logger.log(`Delete a mail template`);
-
-    try {
-      const foundMailTemplate = await this.mailTemplateRepository.findOne({
-        where: {
-          id: templateId,
-        },
-      });
-      await this.mailTemplateRepository.delete({
-        id: foundMailTemplate.id,
-      });
-      return {
-        message: 'Template deleted successfully',
-      };
-    } catch (error) {
-      this.logger.error(
-        { id: `delete-a-mail-template` },
-        `Delete a mail template`,
-      );
-      throw new InternalServerErrorException(
-        'Something went wrong - unable to delete mail template',
-      );
     }
   }
 

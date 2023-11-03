@@ -49,7 +49,7 @@ export class UserEntity {
     eager: true,
     cascade: true,
   })
-  @JoinColumn({ name: 'template_owner_id', referencedColumnName: 'owner' })
+  @JoinColumn({ name: 'templates_owner_id', referencedColumnName: 'owner' })
   public templates!: Array<MailTemplateEntity>;
 
   @CreateDateColumn({
