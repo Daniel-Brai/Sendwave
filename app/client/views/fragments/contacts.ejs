@@ -61,7 +61,7 @@
                         name="name"
                         hx-get="/api/v1/mail/<%= userId %>/search-contacts"
                         hx-trigger="keyup changed delay:1200ms, name"
-                        hx-target="#search-results"
+                        hx-target="#search-results-contacts"
                         id="search-contacts"
                         class="block p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-primary-500 focus:border-primary-500" 
                         placeholder="Search your contacts by name"
@@ -73,7 +73,7 @@
                 <%- include('../partials/contact-modal.ejs'); %>
               </div>
         </div>
-        <div id="search-results"></div>
+        <div id="search-results-contacts"></div>
         <div x-show="notFound !== null" x-transition>
           <div class="text-lg text-center mt-4 font-normal" x-text="notFound"></div>
         </div>

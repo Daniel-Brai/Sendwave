@@ -1,5 +1,5 @@
-const searchInput = document.getElementById('search-contacts');
-const resultBox = document.getElementById('search-results-contacts');
+const searchTemplInput = document.getElementById('search-templates');
+const resultBox = document.getElementById('search-results-templates');
 
 function showResults(data, type) {
   if (type === 'success') {
@@ -24,12 +24,12 @@ function showResults(data, type) {
         nameElement.classList.add('text-gray-500', 'text-sm');
         nameElement.textContent = result.name;
         
-        const emailElement = document.createElement('span');
-        emailElement.classList.add('text-gray-500', 'text-sm');
-        emailElement.textContent = result.email;
+        const contentElement = document.createElement('span');
+        contentElement.classList.add('text-gray-500', 'text-sm');
+        contentElement.textContent = result.content;
 
         searchResultElement.appendChild(nameElement);
-        searchResultElement.appendChild(emailElement);
+        searchResultElement.appendChild(contentElement);
         resultBox.appendChild(searchResultElement);
       }
     }
@@ -50,7 +50,7 @@ function showResults(data, type) {
   }
 }
 
-searchInput.addEventListener('htmx:afterRequest', function (event) {
+searchTemplInput.addEventListener('htmx:afterRequest', function (event) {
   const response = JSON.parse(event.detail.xhr.response);
 
   if (event.detail.xhr.status === 200) {

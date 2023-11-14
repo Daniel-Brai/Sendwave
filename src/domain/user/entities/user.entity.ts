@@ -27,10 +27,10 @@ export class UserEntity {
   @Exclude({ toPlainOnly: true })
   public passwordReset: any;
 
-  @Column({ type: 'varchar', nullable: true, select: false })
+  @Column({ type: 'varchar', nullable: true })
   public confirmation_token: string;
 
-  @Column({ type: 'varchar', length: 6, nullable: true, select: false })
+  @Column({ type: 'varchar', length: 6, nullable: true })
   public otp_code: string;
 
   @Column({ type: 'boolean', default: false })

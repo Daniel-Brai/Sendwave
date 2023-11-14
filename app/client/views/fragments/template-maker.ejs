@@ -21,6 +21,7 @@
             const res = await response.json();
             if(!res.length) {
               this.notFound = '🔖 No templates found!';
+              console.log('Templates fetched successfully - None found');
             } else {
               this.templates = res;
               console.log('Templates fetched successfully');
@@ -61,8 +62,8 @@
                         name="name"
                         hx-get="/api/v1/mail/<%= userId %>/search-templates"
                         hx-trigger="keyup changed delay:1200ms, name"
-                        hx-target="#search-results"
-                        id="search-contacts"
+                        hx-target="#search-results-templates"
+                        id="search-templates"
                         class="block p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg w-80 bg-gray-50 focus:ring-primary-500 focus:border-primary-500" 
                         placeholder="Search your template by name"
                       >
@@ -73,7 +74,7 @@
                 <%- include('../partials/template-modal.ejs'); %>
               </div>
         </div>
-        <div id="search-results"></div>
+        <div id="search-results-templates"></div>
         <div x-show="notFound !== null" x-transition>
           <div class="text-lg text-center mt-4 font-normal" x-text="notFound"></div>
         </div>
@@ -114,3 +115,4 @@
     </div>
 </div>
 </section>
+<script src="js/dashboard-templates.js"></script>

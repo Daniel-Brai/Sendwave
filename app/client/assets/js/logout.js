@@ -1,4 +1,4 @@
-const logOutForm = document.getElementById('logout-form');
+const logoutForm = document.getElementById('logout-form');
 const messageBlock = document.getElementById('message-renderer');
 
 function showToast(message, type) {
@@ -16,7 +16,7 @@ function showToast(message, type) {
                     </button>
                 </div>
         `;
-    logOutForm.reset();
+    logoutForm.reset();
     setTimeout(() => {
       window.location.href = '/';
     }, 2000);
@@ -34,11 +34,11 @@ function showToast(message, type) {
                    </button>
                 </div>
         `;
-    logOutForm.reset();
+    logoutForm.reset();
   }
 }
 
-logOutForm.addEventListener('htmx:afterRequest', function (event) {
+logoutForm.addEventListener('htmx:afterRequest', function (event) {
   const response = JSON.parse(event.detail.xhr.response);
   const message = response['message'];
   const logout_success_message = 'Logout successful';
